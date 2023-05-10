@@ -43,7 +43,5 @@ o/**
 *.idb
 *.pdb
 
-# Other RISC OS specific
-h/**
-include/**
-lib/**
+# Ignore the RISC OS library source tree since the files should be in the standard source tree
+library/**
