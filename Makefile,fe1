@@ -1,0 +1,140 @@
+# Project:   libsmb2
+
+
+# Toolflags:
+CCflags = -c -depend !Depend -IC: -ITCPIPLibs: -I@.lib -I@.include -I@.include.smb2 -throwback -Wp -fah -DHAVE_CONFIG_H -ez
+C++flags = -c -depend !Depend -IC: -throwback
+Linkflags = -aif -c++ -o $@
+ObjAsmflags = -throwback -NoCache -depend !Depend
+CMHGflags =
+LibFileflags = -c -o $@
+Squeezeflags = -o $@
+ModSqzflags = -o $@
+
+
+# Final targets:
+@.libsmb2/a:   @.o.aes @.o.aes128ccm @.o.alloc @.o.compat @.o.dcerpc \
+        @.o.dcerpc-lsa @.o.dcerpc-srvsvc @.o.errors @.o.hmac @.o.hmac-md5 @.o.init @.o.krb5-wrapper \
+        @.o.libsmb2 @.o.md4c @.o.md5 @.o.ntlmssp @.o.pdu @.o.sha1 @.o.sha224-256 @.o.sha384-512 \
+        @.o.smb2-cmd-close @.o.smb2-cmd-create @.o.smb2-cmd-echo @.o.smb2-cmd-error @.o.smb2-cmd-flush \
+        @.o.smb2-cmd-ioctl @.o.smb2-cmd-logoff @.o.smb2-cmd-negotiate @.o.smb2-cmd-query-directory \
+        @.o.smb2-cmd-query-info @.o.smb2-cmd-read @.o.smb2-cmd-session-setup @.o.smb2-cmd-set-info \
+        @.o.smb2-cmd-tree-connect @.o.smb2-cmd-tree-disconnect @.o.smb2-cmd-write @.o.smb2-data-file-info \
+        @.o.smb2-data-filesystem-info @.o.smb2-data-reparse-point @.o.smb2-data-security-descriptor \
+        @.o.smb2-share-enum @.o.smb2-signing @.o.smb3-seal @.o.socket @.o.sync @.o.timestamps @.o.unicode \
+        @.o.usha
+        libfile $(libfileflags) @.o.aes @.o.aes128ccm @.o.alloc @.o.compat \
+        @.o.dcerpc @.o.dcerpc-lsa @.o.dcerpc-srvsvc @.o.errors @.o.hmac @.o.hmac-md5 @.o.init \
+        @.o.krb5-wrapper @.o.libsmb2 @.o.md4c @.o.md5 @.o.ntlmssp @.o.pdu @.o.sha1 @.o.sha224-256 \
+        @.o.sha384-512 @.o.smb2-cmd-close @.o.smb2-cmd-create @.o.smb2-cmd-echo @.o.smb2-cmd-error \
+        @.o.smb2-cmd-flush @.o.smb2-cmd-ioctl @.o.smb2-cmd-logoff @.o.smb2-cmd-negotiate \
+        @.o.smb2-cmd-query-directory @.o.smb2-cmd-query-info @.o.smb2-cmd-read @.o.smb2-cmd-session-setup \
+        @.o.smb2-cmd-set-info @.o.smb2-cmd-tree-connect @.o.smb2-cmd-tree-disconnect @.o.smb2-cmd-write \
+        @.o.smb2-data-file-info @.o.smb2-data-filesystem-info @.o.smb2-data-reparse-point \
+        @.o.smb2-data-security-descriptor @.o.smb2-share-enum @.o.smb2-signing @.o.smb3-seal @.o.socket @.o.sync \
+        @.o.timestamps @.o.unicode @.o.usha
+
+
+# User-editable dependencies:
+
+
+# Static dependencies:
+@.o.aes:   @.lib.c.aes
+        cc $(ccflags) -o @.o.aes @.lib.c.aes
+@.o.aes128ccm:   @.lib.c.aes128ccm
+        cc $(ccflags) -o @.o.aes128ccm @.lib.c.aes128ccm
+@.o.alloc:   @.lib.c.alloc
+        cc $(ccflags) -o @.o.alloc @.lib.c.alloc
+@.o.compat:   @.lib.c.compat
+        cc $(ccflags) -o @.o.compat @.lib.c.compat
+@.o.dcerpc:   @.lib.c.dcerpc
+        cc $(ccflags) -o @.o.dcerpc @.lib.c.dcerpc
+@.o.dcerpc-lsa:   @.lib.c.dcerpc-lsa
+        cc $(ccflags) -o @.o.dcerpc-lsa @.lib.c.dcerpc-lsa
+@.o.dcerpc-srvsvc:   @.lib.c.dcerpc-srvsvc
+        cc $(ccflags) -o @.o.dcerpc-srvsvc @.lib.c.dcerpc-srvsvc
+@.o.errors:   @.lib.c.errors
+        cc $(ccflags) -o @.o.errors @.lib.c.errors
+@.o.hmac:   @.lib.c.hmac
+        cc $(ccflags) -o @.o.hmac @.lib.c.hmac
+@.o.hmac-md5:   @.lib.c.hmac-md5
+        cc $(ccflags) -o @.o.hmac-md5 @.lib.c.hmac-md5
+@.o.init:   @.lib.c.init
+        cc $(ccflags) -o @.o.init @.lib.c.init
+@.o.krb5-wrapper:   @.lib.c.krb5-wrapper
+        cc $(ccflags) -o @.o.krb5-wrapper @.lib.c.krb5-wrapper
+@.o.libsmb2:   @.lib.c.libsmb2
+        cc $(ccflags) -o @.o.libsmb2 @.lib.c.libsmb2
+@.o.md4c:   @.lib.c.md4c
+        cc $(ccflags) -o @.o.md4c @.lib.c.md4c
+@.o.md5:   @.lib.c.md5
+        cc $(ccflags) -o @.o.md5 @.lib.c.md5
+@.o.ntlmssp:   @.lib.c.ntlmssp
+        cc $(ccflags) -o @.o.ntlmssp @.lib.c.ntlmssp
+@.o.pdu:   @.lib.c.pdu
+        cc $(ccflags) -o @.o.pdu @.lib.c.pdu
+@.o.sha1:   @.lib.c.sha1
+        cc $(ccflags) -o @.o.sha1 @.lib.c.sha1
+@.o.sha224-256:   @.lib.c.sha224-256
+        cc $(ccflags) -o @.o.sha224-256 @.lib.c.sha224-256
+@.o.sha384-512:   @.lib.c.sha384-512
+        cc $(ccflags) -o @.o.sha384-512 @.lib.c.sha384-512
+@.o.smb2-cmd-close:   @.lib.c.smb2-cmd-close
+        cc $(ccflags) -o @.o.smb2-cmd-close @.lib.c.smb2-cmd-close
+@.o.smb2-cmd-create:   @.lib.c.smb2-cmd-create
+        cc $(ccflags) -o @.o.smb2-cmd-create @.lib.c.smb2-cmd-create
+@.o.smb2-cmd-echo:   @.lib.c.smb2-cmd-echo
+        cc $(ccflags) -o @.o.smb2-cmd-echo @.lib.c.smb2-cmd-echo
+@.o.smb2-cmd-error:   @.lib.c.smb2-cmd-error
+        cc $(ccflags) -o @.o.smb2-cmd-error @.lib.c.smb2-cmd-error
+@.o.smb2-cmd-flush:   @.lib.c.smb2-cmd-flush
+        cc $(ccflags) -o @.o.smb2-cmd-flush @.lib.c.smb2-cmd-flush
+@.o.smb2-cmd-ioctl:   @.lib.c.smb2-cmd-ioctl
+        cc $(ccflags) -o @.o.smb2-cmd-ioctl @.lib.c.smb2-cmd-ioctl
+@.o.smb2-cmd-logoff:   @.lib.c.smb2-cmd-logoff
+        cc $(ccflags) -o @.o.smb2-cmd-logoff @.lib.c.smb2-cmd-logoff
+@.o.smb2-cmd-negotiate:   @.lib.c.smb2-cmd-negotiate
+        cc $(ccflags) -o @.o.smb2-cmd-negotiate @.lib.c.smb2-cmd-negotiate
+@.o.smb2-cmd-query-directory:   @.lib.c.smb2-cmd-query-directory
+        cc $(ccflags) -o @.o.smb2-cmd-query-directory @.lib.c.smb2-cmd-query-directory
+@.o.smb2-cmd-query-info:   @.lib.c.smb2-cmd-query-info
+        cc $(ccflags) -o @.o.smb2-cmd-query-info @.lib.c.smb2-cmd-query-info
+@.o.smb2-cmd-read:   @.lib.c.smb2-cmd-read
+        cc $(ccflags) -o @.o.smb2-cmd-read @.lib.c.smb2-cmd-read
+@.o.smb2-cmd-session-setup:   @.lib.c.smb2-cmd-session-setup
+        cc $(ccflags) -o @.o.smb2-cmd-session-setup @.lib.c.smb2-cmd-session-setup
+@.o.smb2-cmd-set-info:   @.lib.c.smb2-cmd-set-info
+        cc $(ccflags) -o @.o.smb2-cmd-set-info @.lib.c.smb2-cmd-set-info
+@.o.smb2-cmd-tree-connect:   @.lib.c.smb2-cmd-tree-connect
+        cc $(ccflags) -o @.o.smb2-cmd-tree-connect @.lib.c.smb2-cmd-tree-connect
+@.o.smb2-cmd-tree-disconnect:   @.lib.c.smb2-cmd-tree-disconnect
+        cc $(ccflags) -o @.o.smb2-cmd-tree-disconnect @.lib.c.smb2-cmd-tree-disconnect
+@.o.smb2-cmd-write:   @.lib.c.smb2-cmd-write
+        cc $(ccflags) -o @.o.smb2-cmd-write @.lib.c.smb2-cmd-write
+@.o.smb2-data-file-info:   @.lib.c.smb2-data-file-info
+        cc $(ccflags) -o @.o.smb2-data-file-info @.lib.c.smb2-data-file-info
+@.o.smb2-data-filesystem-info:   @.lib.c.smb2-data-filesystem-info
+        cc $(ccflags) -o @.o.smb2-data-filesystem-info @.lib.c.smb2-data-filesystem-info
+@.o.smb2-data-reparse-point:   @.lib.c.smb2-data-reparse-point
+        cc $(ccflags) -o @.o.smb2-data-reparse-point @.lib.c.smb2-data-reparse-point
+@.o.smb2-data-security-descriptor:   @.lib.c.smb2-data-security-descriptor
+        cc $(ccflags) -o @.o.smb2-data-security-descriptor @.lib.c.smb2-data-security-descriptor
+@.o.smb2-share-enum:   @.lib.c.smb2-share-enum
+        cc $(ccflags) -o @.o.smb2-share-enum @.lib.c.smb2-share-enum
+@.o.smb2-signing:   @.lib.c.smb2-signing
+        cc $(ccflags) -o @.o.smb2-signing @.lib.c.smb2-signing
+@.o.smb3-seal:   @.lib.c.smb3-seal
+        cc $(ccflags) -o @.o.smb3-seal @.lib.c.smb3-seal
+@.o.socket:   @.lib.c.socket
+        cc $(ccflags) -o @.o.socket @.lib.c.socket
+@.o.sync:   @.lib.c.sync
+        cc $(ccflags) -o @.o.sync @.lib.c.sync
+@.o.timestamps:   @.lib.c.timestamps
+        cc $(ccflags) -o @.o.timestamps @.lib.c.timestamps
+@.o.unicode:   @.lib.c.unicode
+        cc $(ccflags) -o @.o.unicode @.lib.c.unicode
+@.o.usha:   @.lib.c.usha
+        cc $(ccflags) -o @.o.usha @.lib.c.usha
+
+
+# Dynamic dependencies:
