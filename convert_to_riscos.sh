@@ -38,7 +38,7 @@ function copy_or_diff() {
 
 # Ensure that the required directories exist, and are read and writable from RISC OS
 
-for dir in 'h' 'o' 'lib' 'lib/h' 'lib/c' 'include/h' 'include/smb2/h'; do
+for dir in 'c' 'h' 'o' 'lib' 'lib/h' 'lib/c' 'include/h' 'include/smb2/h'; do
     if [ ! -d $dir ]; then
         mkdir -p library/$dir
         chmod u=rwx,g=rwx,o=rwx library/$dir
@@ -48,7 +48,7 @@ chmod u=rwx,g=rwx,o=rwx library
 
 # lib/*.(c|h) files
 
-for source in 'aes' 'aes128ccm' 'alloc' 'compat' 'dcerpc' 'dcerpc-lsa' 'dcerpc-srvsvc' 'errors' 'hmac' 'hmac-md5' 'init' 'krb5-wrapper' 'libsmb2' 'md4c' 'md5' 'ntlmssp' 'pdu' 'sha' 'sha-private' 'sha1' 'sha224-256' 'sha384-512' 'smb2-cmd-close' 'smb2-cmd-create' 'smb2-cmd-echo' 'smb2-cmd-error' 'smb2-cmd-flush' 'smb2-cmd-ioctl' 'smb2-cmd-logoff' 'smb2-cmd-negotiate' 'smb2-cmd-query-directory' 'smb2-cmd-query-info' 'smb2-cmd-read' 'smb2-cmd-session-setup' 'smb2-cmd-set-info' 'smb2-cmd-tree-connect' 'smb2-cmd-tree-disconnect' 'smb2-cmd-write' 'smb2-data-file-info' 'smb2-data-filesystem-info' 'smb2-data-reparse-point' 'smb2-data-security-descriptor' 'smb2-share-enum' 'smb2-signing' 'smb3-seal' 'socket' 'sync' 'timestamps' 'unicode' 'usha'; do
+for source in 'aes' 'aes128ccm' 'alloc' 'compat' 'dcerpc' 'dcerpc-lsa' 'dcerpc-srvsvc' 'errors' 'hmac' 'hmac-md5' 'init' 'krb5-wrapper' 'libsmb2' 'md4' 'md4c' 'md5' 'ntlmssp' 'pdu' 'sha' 'sha-private' 'sha1' 'sha224-256' 'sha384-512' 'smb2-cmd-close' 'smb2-cmd-create' 'smb2-cmd-echo' 'smb2-cmd-error' 'smb2-cmd-flush' 'smb2-cmd-ioctl' 'smb2-cmd-logoff' 'smb2-cmd-negotiate' 'smb2-cmd-query-directory' 'smb2-cmd-query-info' 'smb2-cmd-read' 'smb2-cmd-session-setup' 'smb2-cmd-set-info' 'smb2-cmd-tree-connect' 'smb2-cmd-tree-disconnect' 'smb2-cmd-write' 'smb2-data-file-info' 'smb2-data-filesystem-info' 'smb2-data-reparse-point' 'smb2-data-security-descriptor' 'smb2-share-enum' 'smb2-signing' 'smb3-seal' 'socket' 'sync' 'timestamps' 'unicode' 'usha'; do
     for type in 'c' 'h'; do
         copy_or_diff libsmb2/lib/$source.$type  library/lib/$type/$source
     done
@@ -62,7 +62,7 @@ done
 
 # include/*.h files
 
-for header in 'asprintf' 'libsmb2-private' 'portable-endian' 'slist'; do
+for header in 'libsmb2-private' 'portable-endian' 'slist'; do
     copy_or_diff libsmb2/include/$header.h library/include/h/$header
 done
 
@@ -70,6 +70,14 @@ done
 
 for header in 'config'; do
     copy_or_diff libsmb2/riscos/$header.h library/h/$header
+done
+
+# RISC OS specific source files
+
+for source in 'asprintf'; do
+    for type in 'c' 'h'; do
+        copy_or_diff libsmb2/riscos/$source.$type library/$type/$source
+    done
 done
 
 # RISC OS specific files
