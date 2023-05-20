@@ -1,1 +1,2 @@
-<obey$dir>.smb2ls smb://reddwarf.development.4mation.co.uk.local/extra
+|<obey$dir>.smb2ls
+<obey$dir>.smb2ls smb://reddwarf.development.4mation.co.uk.local/docs/

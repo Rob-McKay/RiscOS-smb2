@@ -1,0 +1,56 @@
+# Project:   smb2enum
+
+
+.SUFFIXES: .o .oz .s .c .h .c++ .cpp
+
+# C source files -> object files
+.c.o:;          ${cc} ${CCflags} ${CAPPFLAGS} -o $@ $<
+.c.oz:;         ${cc} ${CCflags} ${CMODFLAGS} ${C_MODULE} -o $@ $<
+
+# Assembler source files -> object files
+.s.o:;          ${as} ${ASFLAGS} -o $@ $<
+.s.oz:;         ${as} ${ASFLAGS} -pd "zM SETL {TRUE}" -o $@ $<
+
+cc = CC
+
+# Toolflags:
+CCflags = -c -depend !Depend -IC: -throwback  -ITCPIPLibs: -I@.^.library.lib -I@.^.library.include -I@.^.library.include.smb2 -I@.^.library -Wp -ez -fah
+C++flags = -c -depend !Depend -IC: -throwback
+Linkflags = -aif -o $@
+ObjAsmflags = -throwback -NoCache -depend !Depend
+CMHGflags =
+LibFileflags = -c -o $@
+Squeezeflags = -o $@
+ModSqzflags = -o $@
+
+
+# Final targets:
+@.smb2enum:	@.o.smb2-share-enum @.^.library.libsmb2 TCPIPLibs:o.socklib TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib C:o.stubs
+        link $(linkflags) @.o.smb2-share-enum @.^.library.libsmb2 TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib TCPIPLibs:o.socklib C:o.stubs
+
+
+# User-editable dependencies:
+
+
+# Static dependencies:
+@.o.smb2-share-enum:   @.c.smb2-share-enum
+        cc $(ccflags) -o @.o.smb2-share-enum @.c.smb2-share-enum
+
+
+# Dynamic dependencies:
+o.smb2-share-enum:	c.smb2-share-enum
+o.smb2-share-enum:	^.library.lib.h.compat
+o.smb2-share-enum:	TCPIPLibs:sys.h.errno
+o.smb2-share-enum:	C:h.kernel
+o.smb2-share-enum:	TCPIPLibs:h.inetlib
+o.smb2-share-enum:	TCPIPLibs:sys.h.types
+o.smb2-share-enum:	TCPIPLibs:sys.h.cdefs
+o.smb2-share-enum:	TCPIPLibs:machine.h.endian
+o.smb2-share-enum:	TCPIPLibs:machine.h.ansi
+o.smb2-share-enum:	TCPIPLibs:machine.h.types
+o.smb2-share-enum:	TCPIPLibs:netinet.h.in
+o.smb2-share-enum:	^.library.include.smb2.h.smb2
+o.smb2-share-enum:	^.library.include.smb2.h.smb2-errors
+o.smb2-share-enum:	^.library.include.smb2.h.libsmb2
+o.smb2-share-enum:	^.library.include.smb2.h.libsmb2-dcerpc-srvsvc
+o.smb2-share-enum:	^.library.include.smb2.h.libsmb2-raw
