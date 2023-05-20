@@ -1,0 +1,47 @@
+# Project:   smb2ls
+
+
+.SUFFIXES: .o .oz .s .c .h .c++ .cpp
+
+# C source files -> object files
+.c.o:;          ${cc} ${CCflags} ${CAPPFLAGS} -o $@ $<
+.c.oz:;         ${cc} ${CCflags} ${CMODFLAGS} ${C_MODULE} -o $@ $<
+
+# Assembler source files -> object files
+.s.o:;          ${as} ${ASFLAGS} -o $@ $<
+.s.oz:;         ${as} ${ASFLAGS} -pd "zM SETL {TRUE}" -o $@ $<
+
+cc = CC
+
+# Toolflags:
+CCflags = -c -depend !Depend -IC: -throwback  -ITCPIPLibs: -I@.^.library.lib -I@.^.library.include -I@.^.library.include.smb2 -I@.^.library -Wp -ez -fah
+C++flags = -c -depend !Depend -IC: -throwback
+Linkflags = -aif -o $@
+ObjAsmflags = -throwback -NoCache -depend !Depend
+CMHGflags =
+LibFileflags = -c -o $@
+Squeezeflags = -o $@
+ModSqzflags = -o $@
+
+
+# Final targets:
+@.smb2ls:	@.o.smb2-ls-sync @.^.library.libsmb2 TCPIPLibs:o.socklib TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib C:o.stubs
+        link $(linkflags) @.o.smb2-ls-sync @.^.library.libsmb2 TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib TCPIPLibs:o.socklib C:o.stubs
+
+
+# User-editable dependencies:
+
+
+# Static dependencies:
+@.o.smb2-ls-sync:   @.c.smb2-ls-sync
+        cc $(ccflags) -o @.o.smb2-ls-sync @.c.smb2-ls-sync
+
+
+# Dynamic dependencies:
+o.smb2-ls-sync:	c.smb2-ls-sync
+o.smb2-ls-sync:	^.library.h.asprintf
+o.smb2-ls-sync:	^.library.include.smb2.h.smb2
+o.smb2-ls-sync:	^.library.include.smb2.h.smb2-errors
+o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2
+o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2-dcerpc-srvsvc
+o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2-raw
