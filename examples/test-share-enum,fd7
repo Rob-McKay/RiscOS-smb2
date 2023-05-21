@@ -1,2 +1,3 @@
-<obey$dir>.smb2enum
-<obey$dir>.smb2enum smb://rob@reddwarf.development.4mation.co.uk.local/
+Set NTLM_USER_FILE <Obey$Dir>.passwords
+|<obey$dir>.smb2enum
+<obey$dir>.smb2enum smb://rob@reddwarf/

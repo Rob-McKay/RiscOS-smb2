@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
                         type = "unknown";
                         break;
                 }
-                printf("%-20s %-9s %15"PRIu64" %s", ent->name, type, ent->st.smb2_size, asctime(localtime(&t)));
+                printf("%-40s %-9s %15"PRIu64" %s", ent->name, type, ent->st.smb2_size, asctime(localtime(&t)));
                 if (ent->st.smb2_type == SMB2_TYPE_LINK) {
                         char buf[256];
 
