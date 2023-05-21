@@ -1,6 +1,9 @@
 # MAC OS file metadata files 
 ._*
 
+# VSCode files
+.vscode
+
 # Prerequisites
 *.d
 
