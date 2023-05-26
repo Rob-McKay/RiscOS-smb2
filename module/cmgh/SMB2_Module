@@ -1,0 +1,46 @@
+/*
+ * Convert any changed files in the RISC OS source tree back into the standard libsmb2 source tree
+ *
+ * Copyright 2023 Rob McKay
+ *
+ * This file is part of 'RISC OS libsmb2'
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "VersionNum"
+
+title-string:           Module_ComponentName
+
+help-string:            Module_ComponentName Module_MajorVersion_CMHG Module_MinorVersion_CMHG
+
+date-string:            Module_Date_CMHG
+
+//international-help-file:"Resources:$.Resources."Module_ComponentName".Messages"
+
+initialisation-code:    libsmb2_init
+
+finalisation-code:      libsmb2_final
+
+//service-call-handler:   libsmb2_service Service_ResourceFSStarting
+
+swi-chunk-base-number:  0x5A500
+
+swi-handler-code:       libsmb2_swi_handler
+
+swi-decoding-table:     SMB2,
+                        CreateContext DestroyContext SMB2_SetVersion
+                        SetSecurityMode SetSeal SetSigning SetUser SetPassword SetDomain SetWorkstation
+                        ConnectShare DisconnectShare
+                        OpenDir CloseDir ReadDir RewindDir TellDir SeekDir 
+                        Open Close FSync GetMaxReadSize GetMaxWriteSize PRead Read PWrite Write
