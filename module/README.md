@@ -12,6 +12,8 @@ This directory contains the sources for the RISC OS libsmb2 module which is an i
 
 ## SMB2_CreateContext
 
+(SWI &54500)
+
 ### Exit
 
 R0 contains the context handle if the V (overflow) flag is clear.
@@ -25,6 +27,8 @@ ___
 
 ## SMB2_DestroyContext
 
+(SWI &54501)
+
 ### Entry
 
 R0 the SMB2 context handle
@@ -36,20 +40,21 @@ If the V flag is set, then an error occurred, and R0 points to an error block, t
 
 ### Use
 
-Destroy a smb2 context.
+Destroy a SMB2 context.
 
-Any open "struct smb2fh" will automatically be freed. You can not reference
-any "struct smb2fh" after the context is destroyed.
+Any open `SMB2 file handle` will automatically be freed. You can not reference
+any `SMB2 file handle` associated with the context after the context is destroyed.
 
-Any open "struct smb2dir" will automatically be freed. You can not reference
-any "struct smb2dir" after the context is destroyed.
+Any open `SMB 2 directory handle` will automatically be freed. You can not reference any `SMB 2 directory handle` after the context is destroyed.
 
 Any pending async commands will be aborted with -ECONNRESET.
 
 ___
 
 ## SMB2_SetVersion
-    
+
+(SWI &54502)
+
 ### Entry
 
 R0 the SMB2 context handle\
@@ -66,23 +71,27 @@ Set which version of SMB to negotiate. Default is to let the server pick the ver
 
 #### SMB2 negotiate version
 
-* SMB2_VERSION_ANY  = 0,
-* SMB2_VERSION_ANY2 = 2,
-* SMB2_VERSION_ANY3 = 3,
-* SMB2_VERSION_0202 = 0x0202,
-* SMB2_VERSION_0210 = 0x0210,
-* SMB2_VERSION_0300 = 0x0300,
-* SMB2_VERSION_0302 = 0x0302,
-* SMB2_VERSION_0311 = 0x0311
+``` C
+ SMB2_VERSION_ANY  = 0,
+ SMB2_VERSION_ANY2 = 2,
+ SMB2_VERSION_ANY3 = 3,
+ SMB2_VERSION_0202 = 0x0202,
+ SMB2_VERSION_0210 = 0x0210,
+ SMB2_VERSION_0300 = 0x0300,
+ SMB2_VERSION_0302 = 0x0302,
+ SMB2_VERSION_0311 = 0x0311
+```
 
 ___
 
 ## SMB2_SetSecurityMode
 
+(SWI &54503)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 uint16_t security_mode
+R1 the security mode
 
 ### Exit
 
@@ -93,14 +102,23 @@ If the V flag is set, then an error occurred, and R0 points to an error block, t
 
 Set the security mode for the connection. This is a combination of the flags SMB2_NEGOTIATE_SIGNING_ENABLED and SMB2_NEGOTIATE_SIGNING_REQUIRED. Default is 0.
 
+``` C
+SMB2_NEGOTIATE_SIGNING_ENABLED  = 0x0001,
+SMB2_NEGOTIATE_SIGNING_REQUIRED = 0x0002
+```
 ___
 
 ## SMB2_SetSeal
 
+(SWI &54504)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 int val
+R1
+
+* 0: disable encryption. This is the default.
+* Non-zero: enable encryption.
 
 ### Exit
 
@@ -111,17 +129,19 @@ If the V flag is set, then an error occurred, and R0 points to an error block, t
 
 Set whether smb3 encryption should be used or not.
 
-* 0: disable encryption. This is the default.
-* Non-zero: enable encryption.
-
 ___
 
 ## SMB2_SetSigning
 
+(SWI &54505)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 int val
+R1
+
+* 0: do not require signing. This is the default.
+* Non-zero: require signing.
 
 ### Exit
 
@@ -132,17 +152,16 @@ If the V flag is set, then an error occurred, and R0 points to an error block, t
 
 Set whether smb2 signing should be required or not
 
-* 0: do not require signing. This is the default.
-* Non-zero: require signing.
-
 ___
 
 ## SMB2_SetUser
 
+(SWI &54506)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char *user
+R1 `const char *` user
 
 ### Exit
 
@@ -158,10 +177,12 @@ ___
 
 ## SMB2_SetPassword
 
+(SWI &54507)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char *password
+R1 `const char *` the password to use when connecting
 
 ### Exit
 
@@ -176,10 +197,12 @@ ___
 
 ## SMB_SetDomain
 
+(SWI &54508)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char *domain
+R1 `const char *` the domain to use when connecting
 
 ### Exit
 
@@ -194,10 +217,12 @@ ___
 
 ## SMB2_SetWorkstation
 
+(SWI &54509)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char *workstation
+R1 `const char *` the workstation name to use when connecting
 
 ### Exit
 
@@ -212,12 +237,14 @@ ___
 
 ## SMB2_ConnectShare
 
+(SWI &5450A)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char \*server\
-R2 const char \*share\
-R3 const char \*user
+R1 `const char *` server address to connect to\
+R2 `const char *` share to connect to\
+R3 `const char *` the user to connect as
 
 ### Exit
 
@@ -231,6 +258,8 @@ Synchronous call to connect to a share.
 ___
 
 ## SMB2_DisconnectShare
+
+(SWI &5450B)
 
 ### Entry
 
@@ -250,14 +279,16 @@ ___
 
 ## SMB2_OpenDir
 
+(SWI &5450C)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 const char *path
+R1 `const char *` the path of the directory
 
 ### Exit
 
-R0 struct smb2dir *
+R0 the SMB 2 directory handle
 
 If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
 
@@ -269,10 +300,12 @@ ___
 
 ## SMB2_CloseDir
 
+(SWI &5450D)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 struct smb2dir *smb2dir
+R1 the SMB 2 directory handle
 
 ### Exit
 
@@ -288,14 +321,16 @@ ___
 
 ## SMB2_ReadDir
 
+(SWI &5450E)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 struct smb2dir *smb2dir
+R1 the SMB 2 directory handle
 
 ## Exit
 
-R0 struct smb2dirent *
+R0 `struct smb2_dirent *` pointer to a directory entry
 
 If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
 
@@ -307,10 +342,12 @@ ___
 
 ## SMB2_RewindDir
 
+(SWI &5450F)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 struct smb2dir *smb2dir
+R1 the SMB 2 directory handle
 
 ### Exit
 
@@ -326,10 +363,12 @@ ___
 
 ## SMB2_TellDir
 
+(SWI &54510)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 struct smb2dir *smb2dir
+R1 the SMB 2 directory handle
 
 ## Exit
 
@@ -345,10 +384,12 @@ ___
 
 ## SMB2_SeekDir
 
+(SWI &54511)
+
 ### Entry
 
 R0 the SMB2 context handle\
-R1 struct smb2dir *smb2dir\
+R1 the SMB 2 directory handle\
 R2 the location of the new current directory entry
 
 ### Exit
@@ -362,6 +403,249 @@ If the V flag is set, then an error occurred, and R0 points to an error block, t
 seek directory position
 
 ___
+
+## SMB2_Open
+
+(SWI &54512)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 `const char *` the file path to open\
+R2 the file open flags
+
+### Exit
+
+R0 the SMB2 file handle
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+Opens or creates a file.
+
+Supported flags are:
+
+``` C
+O_RDONLY =       0x0000,      /* open for reading only */
+O_WRONLY =       0x0001,      /* open for writing only */
+O_RDWR   =       0x0002,      /* open for reading and writing */
+O_SYNC   =       0x0080,      /* synch I/O file integrity */
+O_CREAT  =       0x0200,      /* create if nonexistant */
+O_TRUNC  =       0x0400,      /* truncate to zero length */
+O_EXCL   =       0x0800       /* error if already exists */
+```
+
+___
+
+## SMB2_Close
+
+(SWI &54513)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle
+
+### Exit
+
+R0 int
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+Sync close()
+
+___
+
+## SMB2_FSync
+
+(SWI &54514)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle
+
+### Exit
+
+R0 int
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+Sync fsync()
+
+___
+
+## SMB2_GetMaxReadSize
+
+(SWI &54515)
+
+### Entry
+
+R0 the SMB2 context handle\
+
+### Exit
+
+R0 uint32_t maximum read size
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+SMB2 servers have a maximum size for reading data that they support.
+
+___
+
+## SMB2_GetMaxWriteSize
+
+(SWI &54516)
+
+### Entry
+
+R0 the SMB2 context handle\
+
+### Exit
+
+R0 uint32_t the maximum write size
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+SMB2 servers have a maximum size for writing data that they support.
+
+___
+
+## SMB2_PRead
+
+(SWI &54517)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle\
+R2 `uint8_t *buf`\
+R3 `uint32_t count`\
+R4,R5 `uint64_t offset` (R4 = lower 32 bits of the offset)
+
+### Exit
+
+R0 the number of bytes read
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+Synchronous file read.
+Use SMB2_GetMaxReadSize to discover the maximum data size that the server supports.
+
+___
+
+## SMB2_Read
+
+(SWI &54518)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle\
+R2 `uint8_t *buf`\
+R3 `uint32_t count`
+
+### Exit
+
+R0 the number of bytes read
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+Synchronous file read.
+Use SMB2_GetMaxReadSize to discover the maximum data size that the server supports.
+
+___
+
+## SMB2_PWrite
+
+(SWI &54519)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle\
+R2 `uint8_t *buf`\
+R3 `uint32_t count`\
+R4,R5 `uint64_t offset` (R4 = lower 32 bits of the offset)
+
+### Exit
+
+R0 Number of bytes written
+
+### Use
+
+Use SMB2_GetMaxWriteSize to discover the maximum data size that the server supports.
+
+___
+
+## SMB2_Write
+
+(SWI &5451A)
+
+### Entry
+
+R0 the SMB2 context handle\
+R1 the SMB2 file handle\
+R2 `uint8_t *buf`\
+R3 `uint32_t count`
+
+### Exit
+
+R0 Number of bytes written
+
+### Use
+
+Use SMB2_GetMaxWriteSize to discover the maximum data size that the server supports.
+
+___
+
+# Structures
+
+## smb2_stat_64
+
+``` C
+/* Stat structure */
+#define SMB2_TYPE_FILE      0x00000000
+#define SMB2_TYPE_DIRECTORY 0x00000001
+#define SMB2_TYPE_LINK      0x00000002
+
+struct smb2_stat_64 {
+        uint32_t smb2_type;
+        uint32_t smb2_nlink;
+        uint64_t smb2_ino;
+        uint64_t smb2_size;
+        uint64_t smb2_atime;
+        uint64_t smb2_atime_nsec;
+        uint64_t smb2_mtime;
+        uint64_t smb2_mtime_nsec;
+        uint64_t smb2_ctime;
+        uint64_t smb2_ctime_nsec;
+    uint64_t smb2_btime;
+    uint64_t smb2_btime_nsec;
+};
+```
+
+## smb2_dirent
+
+``` C
+struct smb2_dirent {
+        const char *name;
+        struct smb2_stat_64 st;
+};
+```
 
 # Errors
 
