@@ -20,12 +20,16 @@
 #include "VersionNum"
 
 title-string:           Module_ComponentName
+
 help-string:            Module_ComponentName Module_Version_CMHG
+
 date-string:            Module_Date_CMHG
 
 //international-help-file:"Resources:$.Resources."Module_ComponentName".Messages"
+
 //initialisation-code:    libsmb2_init
 //finalisation-code:      libsmb2_final
+
 //service-call-handler:   libsmb2_service Service_ResourceFSStarting
 
 swi-chunk-base-number:  0x5A500

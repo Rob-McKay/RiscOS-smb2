@@ -18,7 +18,7 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "smb2Hdr.h"
+#include "libsmb2Hdr.h"
 
 #include <stdint.h>
 #include <stddef.h>
