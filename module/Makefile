@@ -1,4 +1,4 @@
-# Makefile for examplemod
+# Makefile for libsmb2
 
 libsmb2Sources = aes aes128ccm alloc compat dcerpc \
 	dcerpc-lsa dcerpc-srvsvc errors hmac hmac-md5 init \
