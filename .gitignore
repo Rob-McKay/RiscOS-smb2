@@ -12,7 +12,10 @@
 *.ko
 *.obj
 *.elf
-o/**
+
+# RISC OS object files
+**/oz/**,ffd
+**/o/**,ffd
 
 # Linker output
 *.ilk

@@ -4,15 +4,13 @@ RISC OS libsmb2 Module
 This directory contains the sources for the RISC OS libsmb2 module which is an interface to the libsmb2 library.
 
   Module Name: libsmb2\
-  SWI chunk: &5A500\
-  Prefix: SMB2\
+  SWI Prefix: SMB2\
   Description: SMB 2/3 services
+  SWI chunk: 0x5A500
 
 # SWIs
 
 ## SMB2_CreateContext
-
-(SWI &54500)
 
 ### Exit
 
@@ -26,8 +24,6 @@ Create an SMB2 context.
 ___
 
 ## SMB2_DestroyContext
-
-(SWI &54501)
 
 ### Entry
 
@@ -52,8 +48,6 @@ Any pending async commands will be aborted with -ECONNRESET.
 ___
 
 ## SMB2_SetVersion
-
-(SWI &54502)
 
 ### Entry
 
@@ -86,8 +80,6 @@ ___
 
 ## SMB2_SetSecurityMode
 
-(SWI &54503)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -110,8 +102,6 @@ ___
 
 ## SMB2_SetSeal
 
-(SWI &54504)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -132,8 +122,6 @@ Set whether smb3 encryption should be used or not.
 ___
 
 ## SMB2_SetSigning
-
-(SWI &54505)
 
 ### Entry
 
@@ -156,8 +144,6 @@ ___
 
 ## SMB2_SetUser
 
-(SWI &54506)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -177,8 +163,6 @@ ___
 
 ## SMB2_SetPassword
 
-(SWI &54507)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -196,8 +180,6 @@ Set the password that we will try to authenticate as.
 ___
 
 ## SMB_SetDomain
-
-(SWI &54508)
 
 ### Entry
 
@@ -217,8 +199,6 @@ ___
 
 ## SMB2_SetWorkstation
 
-(SWI &54509)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -236,8 +216,6 @@ Set the workstation when authenticating.
 ___
 
 ## SMB2_ConnectShare
-
-(SWI &5450A)
 
 ### Entry
 
@@ -259,8 +237,6 @@ ___
 
 ## SMB2_DisconnectShare
 
-(SWI &5450B)
-
 ### Entry
 
 R0 the SMB2 context handle
@@ -277,9 +253,23 @@ Synchronous call to disconnect from a share
 
 ___
 
-## SMB2_OpenDir
+## SMB2_ShareEnum 
 
-(SWI &5450C)
+### Entry
+
+R0 the SMB2 context handle
+
+### Exit
+
+R0 corrupted.
+
+If the V flag is set, then an error occurred, and R0 points to an error block, the first word of which contains an error number. The rest of the error block consists of a null-terminated error message.
+
+### Use
+
+___
+
+## SMB2_OpenDir
 
 ### Entry
 
@@ -300,8 +290,6 @@ ___
 
 ## SMB2_CloseDir
 
-(SWI &5450D)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -320,8 +308,6 @@ close directory
 ___
 
 ## SMB2_ReadDir
-
-(SWI &5450E)
 
 ### Entry
 
@@ -342,8 +328,6 @@ ___
 
 ## SMB2_RewindDir
 
-(SWI &5450F)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -362,8 +346,6 @@ Rewind directory entry
 ___
 
 ## SMB2_TellDir
-
-(SWI &54510)
 
 ### Entry
 
@@ -384,8 +366,6 @@ ___
 
 ## SMB2_SeekDir
 
-(SWI &54511)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -405,8 +385,6 @@ seek directory position
 ___
 
 ## SMB2_Open
-
-(SWI &54512)
 
 ### Entry
 
@@ -440,8 +418,6 @@ ___
 
 ## SMB2_Close
 
-(SWI &54513)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -460,8 +436,6 @@ Sync close()
 ___
 
 ## SMB2_FSync
-
-(SWI &54514)
 
 ### Entry
 
@@ -482,8 +456,6 @@ ___
 
 ## SMB2_GetMaxReadSize
 
-(SWI &54515)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -502,8 +474,6 @@ ___
 
 ## SMB2_GetMaxWriteSize
 
-(SWI &54516)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -521,8 +491,6 @@ SMB2 servers have a maximum size for writing data that they support.
 ___
 
 ## SMB2_PRead
-
-(SWI &54517)
 
 ### Entry
 
@@ -547,8 +515,6 @@ ___
 
 ## SMB2_Read
 
-(SWI &54518)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -571,8 +537,6 @@ ___
 
 ## SMB2_PWrite
 
-(SWI &54519)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -593,8 +557,6 @@ ___
 
 ## SMB2_Write
 
-(SWI &5451A)
-
 ### Entry
 
 R0 the SMB2 context handle\
@@ -609,6 +571,22 @@ R0 Number of bytes written
 ### Use
 
 Use SMB2_GetMaxWriteSize to discover the maximum data size that the server supports.
+
+___
+
+## SMB2_LibraryVersion
+
+### Entry
+
+\-
+
+### Exit
+
+R0 The version number of the library
+
+### Use
+
+Get the version number of the underlying libsmb2.
 
 ___
 
