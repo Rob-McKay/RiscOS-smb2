@@ -117,21 +117,191 @@ static _kernel_oserror *do_disconnect_share(_kernel_swi_regs *regs)
 }
 
 static _kernel_oserror *do_share_enum(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_open_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_close_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_read_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_rewind_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_tell_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_seek_dir(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_open(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_close(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_fsync(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_get_max_read_size(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_get_max_write_size(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_pread(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_read(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_pwrite(_kernel_swi_regs *regs) { return error_BAD_SWI; }
-static _kernel_oserror *do_write(_kernel_swi_regs *regs) { return error_BAD_SWI; }
+
+static _kernel_oserror *do_open_dir(_kernel_swi_regs *regs)
+{
+    struct smb2dir *result = smb2_opendir((struct smb2_context *)regs->r[0], (const char *)regs->r[1]);
+    if (result != NULL)
+    {
+        regs->r[0] = (int)result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Cannot open directory"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_close_dir(_kernel_swi_regs *regs)
+{
+    smb2_closedir((struct smb2_context *)regs->r[0], (struct smb2dir *)regs->r[1]);
+    return NULL;
+}
+
+static _kernel_oserror *do_read_dir(_kernel_swi_regs *regs)
+{
+    struct smb2dirent *result = smb2_readdir((struct smb2_context *)regs->r[0], (struct smb2dir *)regs->r[1]);
+    if (result != NULL)
+    {
+        regs->r[0] = (int)result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Cannot connect to share"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_rewind_dir(_kernel_swi_regs *regs)
+{
+    smb2_rewinddir((struct smb2_context *)regs->r[0], (struct smb2dir *)regs->r[1]);
+    return NULL;
+}
+
+static _kernel_oserror *do_tell_dir(_kernel_swi_regs *regs)
+{
+    long result = smb2_telldir((struct smb2_context *)regs->r[0], (struct smb2dir *)regs->r[1]);
+    if (result != NULL)
+    {
+        regs->r[0] = (int)result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Cannot connect to share"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_seek_dir(_kernel_swi_regs *regs)
+{
+    smb2_seekdir((struct smb2_context *)regs->r[0], (struct smb2dir *)regs->r[1], regs->r[2]);
+    return NULL;
+}
+
+static _kernel_oserror *do_open(_kernel_swi_regs *regs)
+{
+    struct smb2fh *result = smb2_open((struct smb2_context *)regs->r[0], (char *)regs->r[1], regs->r[2]);
+    if (result != NULL)
+    {
+        regs->r[0] = (int)result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Cannot open file"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_close(_kernel_swi_regs *regs)
+{
+    int result = smb2_close((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1]);
+    if (result == 0)
+    {
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Cannot close file handle"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_fsync(_kernel_swi_regs *regs)
+{
+    int result = smb2_fsync((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1]);
+    if (result == 0)
+    {
+        regs->r[0] = (int)result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "fsync failed"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_get_max_read_size(_kernel_swi_regs *regs)
+{
+    uint32_t result = smb2_get_max_read_size((struct smb2_context *)regs->r[0]);
+    regs->r[0] = (int)result;
+    return NULL;
+}
+
+static _kernel_oserror *do_get_max_write_size(_kernel_swi_regs *regs)
+{
+    uint32_t result = smb2_get_max_write_size((struct smb2_context *)regs->r[0]);
+    regs->r[0] = (int)result;
+    return NULL;
+}
+
+static _kernel_oserror *do_pread(_kernel_swi_regs *regs)
+{
+    uint64_t offset = ((uint64_t)regs->r[4]) | (((uint64_t)(regs->r[5])) << 32);
+
+    int result = smb2_pread((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1], (uint8_t *)regs->r[2], (uint32_t)regs->r[3], offset);
+    if (result >= 0)
+    {
+        regs->r[0] = result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Failed to read data"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_read(_kernel_swi_regs *regs)
+{
+    int result = smb2_read((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1], (uint8_t *)regs->r[2], (uint32_t)regs->r[3]);
+    if (result >= 0)
+    {
+        regs->r[0] = result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Failed to read"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_pwrite(_kernel_swi_regs *regs)
+{
+    uint64_t offset = ((uint64_t)regs->r[4]) | (((uint64_t)(regs->r[5])) << 32);
+
+    int result = smb2_pwrite((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1], (uint8_t *)regs->r[2], (uint32_t)regs->r[3], offset);
+    if (result >= 0)
+    {
+        regs->r[0] = result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Failed to write data"};
+        return &err;
+    }
+}
+
+static _kernel_oserror *do_write(_kernel_swi_regs *regs)
+{
+    int result = smb2_write((struct smb2_context *)regs->r[0], (struct smb2fh *)regs->r[1], (uint8_t *)regs->r[2], (uint32_t)regs->r[3]);
+    if (result >= 0)
+    {
+        regs->r[0] = result;
+        return NULL;
+    }
+    else
+    {
+        static _kernel_oserror err = {SMB2_00, "Failed to read"};
+        return &err;
+    }
+}
 
 _kernel_oserror *libsmb2_swi_handler(int swi_offset, _kernel_swi_regs *regs, void *pw)
 {
