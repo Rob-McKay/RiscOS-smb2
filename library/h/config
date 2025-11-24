@@ -148,6 +148,11 @@
    <sysmacros.h>. */
 /* #undef MAJOR_IN_SYSMACROS */
 
+// Whether or not TCP sockets should be allowed to linger after closure]
+// 0 = Build without lingering TCP sockets
+// 1 = Build with lingering TCP sockets
+#define CONFIGURE_OPTION_TCP_LINGER 0
+
 /* Name of package */
 #define PACKAGE "libsmb2"
 
