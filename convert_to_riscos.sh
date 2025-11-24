@@ -27,8 +27,7 @@
 function copy_or_diff() {
     if [ -f $1 ]; then
         if [ ! -f $2 ]; then
-            cp -n --preserve=ownership,timestamps $1 $2
-            chmod u=rw,g=rw,o=rw $2
+            cp -n -p $1 $2
         else
             diff --strip-trailing-cr -p $1 $2
         fi
