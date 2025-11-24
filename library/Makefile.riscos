@@ -1,0 +1,70 @@
+# Makefile for the libsmb2 library files for RISC OS
+#
+# Copyright 2023 Rob McKay
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+# You should have received a copy of the GNU Lesser General Public
+# License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+cc = CC
+
+# Toolflags:
+CCflags = -c -IC: -ITCPIPLibs: -I@.lib -I@.include -I@.include.smb2 -throwback -Wp -fah -DHAVE_CONFIG_H -ez
+C++flags = -c -IC: -throwback
+Linkflags = -aif -c++ -o $@
+ObjAsmflags = -throwback -NoCache -depend !Depend
+CMHGflags =
+LibFileflags = -c -o $@
+Squeezeflags = -o $@
+ModSqzflags = -o $@
+
+VPATH=@.lib
+
+Sources = aes aes128ccm alloc compat dcerpc \
+	dcerpc-lsa dcerpc-srvsvc errors hmac hmac-md5 init \
+	libsmb2 md4c md5 ntlmssp pdu sha224-256 sha384-512 \
+	smb2-cmd-close smb2-cmd-create smb2-cmd-echo smb2-cmd-error smb2-cmd-flush \
+	smb2-cmd-ioctl smb2-cmd-logoff smb2-cmd-negotiate smb2-cmd-query-directory \
+	smb2-cmd-query-info smb2-cmd-read smb2-cmd-session-setup smb2-cmd-set-info \
+	smb2-cmd-tree-connect smb2-cmd-tree-disconnect smb2-cmd-write smb2-data-file-info \
+	smb2-data-filesystem-info smb2-data-reparse-point smb2-data-security-descriptor \
+	smb2-share-enum smb2-signing smb3-seal socket sync timestamps unicode \
+	usha asprintf
+
+ObjectFiles = $(addprefix @.o., $(Sources))
+ModObjects = $(addprefix @.oz., $(Sources))
+
+.SUFFIXES: .o .oz .s .c .h .c++ .cpp
+
+# C source files -> object files
+.c.o:;          ${cc} ${CCflags} ${CAPPFLAGS} -o $@ $<
+.c.oz:;         ${cc} ${CCflags} ${CMODFLAGS} -zM -zps1 -o $@ $<
+
+# Assembler source files -> object files
+.s.o:;          ${as} ${ASFLAGS} -o $@ $<
+.s.oz:;         ${as} ${ASFLAGS} -pd "zM SETL {TRUE}" -o $@ $<
+
+
+# Final targets:
+all: @.libsmb2_c @.libsmb2_zm
+
+@.libsmb2_c:	$(ObjectFiles)
+	libfile $(LibFileflags) $(ObjectFiles)
+
+@.libsmb2_zm:	$(ModObjects)
+	libfile $(LibFileflags) $(ModObjects)
+
+
+clean:
+	-wipe @.o.* frv~c
+	-remove @.libsmb2_c
+	-wipe @.oz.* frv~c
+	-remove @.libsmb2_zm

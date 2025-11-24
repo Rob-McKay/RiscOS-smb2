@@ -1,5 +1,6 @@
-# MAC OS file metadata files 
+# file metadata files 
 ._*
+.DS_Store
 
 # VSCode files
 .vscode
@@ -48,6 +49,3 @@ o/**
 *.su
 *.idb
 *.pdb
-
-# Ignore the RISC OS library source tree since the files should be in the standard source tree
-library/**
