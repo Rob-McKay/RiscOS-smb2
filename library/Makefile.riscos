@@ -54,7 +54,13 @@ ModObjects = $(addprefix @.oz., $(Sources))
 
 
 # Final targets:
-all: @.libsmb2_c @.libsmb2_zm
+all: @.libsmb2_c @.libsmb2_zm @.o @.oz
+
+@.o:
+	-cdir @.o
+
+@.oz:
+	-cdir @.oz
 
 @.libsmb2_c:	$(ObjectFiles)
 	libfile $(LibFileflags) $(ObjectFiles)
