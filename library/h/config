@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2025 4Mation Educational Resources Ltd
+ *   All rights reserved.
+ */
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
@@ -19,11 +23,41 @@
 /* Define to 1 if you have the <gssapi/gssapi.h> header file. */
 /* #undef HAVE_GSSAPI_GSSAPI_H */
 
-/* Define to 1 if you have the <inttypes.h> header file. */
-#define HAVE_INTTYPES_H 1
+/* Define to 1 if you have the <fcntl.h> header file. */
+/* #undef HAVE_FCNTL_H */
+
+/* Define to 1 if you have the <sys/fcntl.h> header file. */
+#define HAVE_SYS_FCNTL_H 1
+
+/* Define to 1 if you have the <gssapi/gssapi.h> header file. */
+/* #undef HAVE_GSSAPI_GSSAPI_H */
 
 /* Whether we use gssapi_krb5 or not */
 /* #undef HAVE_LIBKRB5 */
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#define HAVE_INTTYPES_H 1
+
+/* Define to 1 if you have the <netdb.h> header file. */
+#define HAVE_NETDB_H 1
+
+/* Define to 1 if you have the <netinet/in.h> header file. */
+#define HAVE_NETINET_IN_H 1
+
+/* Define to 1 if you have the <netinet/tcp.h> header file. */
+#define HAVE_NETINET_TCP_H 1
+
+/* Define to 1 if you have the <poll.h> header file. */
+/* #undef HAVE_POLL_H */
+
+/* Whether sockaddr struct has sa_len */
+/* #undef HAVE_SOCKADDR_LEN */
+
+/* Whether we have sockaddr_Storage */
+/* #undef HAVE_SOCKADDR_STORAGE */
+
+/* Whether we have linger */
+#define HAVE_LINGER 1
 
 /* Define to 1 if you have the `nsl' library (-lnsl). */
 /* #undef HAVE_LIBNSL */
