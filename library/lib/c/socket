@@ -1387,14 +1387,6 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
 #endif
                         default:
                                 return -EINVAL;
-                        }
-                }
-                else {
-                        int port_no = atoi(port);
-                        for (ai = smb2->addrinfos; ai != NULL; ai = ai->ai_next)
-                        {
-                                set_ai_port((struct addrinfo *)ai, ntohs(port_no));
-                        }
                 }
         }
         free(addr);
