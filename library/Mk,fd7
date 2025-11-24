@@ -1,1 +1,4 @@
+|cdir <Obey$Dir>.oz
+|cdir <Obey$Dir>.o
+
 amu -f <Obey$Dir>.Makefile/riscos -desktop

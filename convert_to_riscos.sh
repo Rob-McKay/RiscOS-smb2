@@ -47,7 +47,13 @@ chmod u=rwx,g=rwx,o=rwx library
 
 # lib/*.(c|h) files
 
-for source in 'aes' 'aes128ccm' 'alloc' 'compat' 'dcerpc' 'dcerpc-lsa' 'dcerpc-srvsvc' 'errors' 'hmac' 'hmac-md5' 'init' 'krb5-wrapper' 'libsmb2' 'md4' 'md4c' 'md5' 'ntlmssp' 'pdu' 'sha' 'sha-private' 'sha1' 'sha224-256' 'sha384-512' 'smb2-cmd-close' 'smb2-cmd-create' 'smb2-cmd-echo' 'smb2-cmd-error' 'smb2-cmd-flush' 'smb2-cmd-ioctl' 'smb2-cmd-logoff' 'smb2-cmd-negotiate' 'smb2-cmd-query-directory' 'smb2-cmd-query-info' 'smb2-cmd-read' 'smb2-cmd-session-setup' 'smb2-cmd-set-info' 'smb2-cmd-tree-connect' 'smb2-cmd-tree-disconnect' 'smb2-cmd-write' 'smb2-data-file-info' 'smb2-data-filesystem-info' 'smb2-data-reparse-point' 'smb2-data-security-descriptor' 'smb2-share-enum' 'smb2-signing' 'smb3-seal' 'socket' 'sync' 'timestamps' 'unicode' 'usha'; do
+for source in 'aes' 'aes_apple' 'aes_reference' 'aes128ccm' 'alloc' 'asn1-ber' 'compat' 'dcerpc' 'dcerpc-lsa' 'dcerpc-srvsvc' 'errors' 'hmac' 'hmac-md5' \
+                'init' 'krb5-wrapper' 'libsmb2' \
+                'md4' 'md4c' 'md5' 'ntlmssp' 'pdu' 'sha' 'sha-private' 'sha1' 'sha224-256' 'sha384-512' 'smb2-cmd-close' 'smb2-cmd-create' 'smb2-cmd-echo' \
+                'smb2-cmd-error' 'smb2-cmd-flush' 'smb2-cmd-ioctl' 'smb2-cmd-logoff' 'smb2-cmd-negotiate' 'smb2-cmd-query-directory' 'smb2-cmd-query-info' \
+                'smb2-cmd-read' 'smb2-cmd-session-setup' 'smb2-cmd-set-info' 'smb2-cmd-tree-connect' 'smb2-cmd-tree-disconnect' 'smb2-cmd-write' \
+                'smb2-data-file-info' 'smb2-data-filesystem-info' 'smb2-data-reparse-point' 'smb2-data-security-descriptor' 'smb2-share-enum' 'smb2-signing' \
+                'smb3-seal' 'socket' 'spnego-wrapper' 'sync' 'timestamps' 'unicode' 'usha'; do
     for type in 'c' 'h'; do
         copy_or_diff libsmb2/lib/$source.$type  library/lib/$type/$source
     done
