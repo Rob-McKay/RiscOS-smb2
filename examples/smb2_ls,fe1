@@ -25,8 +25,8 @@ ModSqzflags = -o $@
 
 
 # Final targets:
-@.smb2ls:	@.o.smb2-ls-sync @.^.library.libsmb2 TCPIPLibs:o.socklib TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib C:o.stubs
-        link $(linkflags) @.o.smb2-ls-sync @.^.library.libsmb2 TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib TCPIPLibs:o.socklib C:o.stubs
+@.smb2ls:	@.o.smb2-ls-sync @.^.library.libsmb2_c TCPIPLibs:o.socklib TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib C:o.stubs
+        link $(linkflags) @.o.smb2-ls-sync @.^.library.libsmb2_c TCPIPLibs:o.inetlib TCPIPLibs:o.unixlib TCPIPLibs:o.socklib C:o.stubs
 
 
 # User-editable dependencies:
@@ -44,4 +44,5 @@ o.smb2-ls-sync:	^.library.include.smb2.h.smb2
 o.smb2-ls-sync:	^.library.include.smb2.h.smb2-errors
 o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2
 o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2-dcerpc-srvsvc
+o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2-dcerpc
 o.smb2-ls-sync:	^.library.include.smb2.h.libsmb2-raw
