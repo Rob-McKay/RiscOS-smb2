@@ -23,7 +23,7 @@
 /* #undef HAVE_FCNTL_H */
 
 /* Define to 1 if you have the <sys/fcntl.h> header file. */
-#define HAVE_SYS_FCNTL_H 1
+/* #undef HAVE_SYS_FCNTL_H */
 
 /* Define to 1 if you have the <gssapi/gssapi.h> header file. */
 /* #undef HAVE_GSSAPI_GSSAPI_H */
