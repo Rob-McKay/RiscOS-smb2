@@ -1108,6 +1108,9 @@ set_nonblocking(t_socket fd)
 #elif (defined(__AMIGA__) || defined(__AROS__)) && !defined(__amigaos4__) && !defined(__amigaos3__)
         unsigned long opt = 0;
         IoctlSocket(fd, FIONBIO, (char *)&opt);
+#elif defined __riscos
+        unsigned long opt = 1;
+        socketioctl(fd, FIONBIO, &opt);
 #else
         unsigned v;
         v = fcntl(fd, F_GETFL, 0);

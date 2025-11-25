@@ -848,6 +848,7 @@ int getlogin_r(char *buf, size_t size);
 #undef EOVERFLOW
 #include <sys/errno.h>
 #include <stdint.h>
+#include <socklib.h>
 
 typedef uint32_t UWORD32;
 
