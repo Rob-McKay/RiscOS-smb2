@@ -1283,16 +1283,22 @@ smb2_connect_async_next_addr(struct smb2_context *smb2, const struct addrinfo *b
 static void interleave_addrinfo(struct addrinfo *base)
 {
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
+/**/printf(__FILE__ ":%d base=%p, ai_family = %X\r\n", __LINE__, base, base->ai_family);
 
         struct addrinfo **next = &base->ai_next;
         while (*next) {
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
+/**/printf(__FILE__ ":%d *next=%p\r\n", __LINE__, *next);
 
                 struct addrinfo *cur = *next;
+
+/**/printf(__FILE__ ":%d cur=%p, cur->ai_family = %x\r\n", __LINE__, cur, cur->ai_family);
+
                 /* Iterate forward until we find an entry of a different family. */
                 if (cur->ai_family == base->ai_family) {
+
+/**/printf(__FILE__ ":%d cur=%p\r\n", __LINE__, cur);
+
                         next = &cur->ai_next;
                         continue;
                 }
