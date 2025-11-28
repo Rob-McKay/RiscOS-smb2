@@ -1,2 +1,3 @@
+cdir <Obey$Dir>.o
 amu -f <Obey$Dir>.smb2_ls -desktop
 amu -f <Obey$Dir>.smb2-share-enum -desktop

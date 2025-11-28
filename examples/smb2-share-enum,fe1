@@ -14,7 +14,7 @@
 cc = CC
 
 # Toolflags:
-CCflags = -c -depend !Depend -IC: -throwback  -ITCPIPLibs: -I@.^.library.lib -I@.^.library.include -I@.^.library.include.smb2 -I@.^.library -Wp -ez -fah
+CCflags = -c -depend !Depend -IC: -throwback -ITCPIPLibs: -I@.^.library.lib -I@.^.library.include -I@.^.library.include.smb2 -I@.^.library -Wp -ez -fah
 C++flags = -c -depend !Depend -IC: -throwback
 Linkflags = -aif -o $@
 ObjAsmflags = -throwback -NoCache -depend !Depend
