@@ -665,6 +665,7 @@ long long int be64toh(long long int x)
 #include <arpa/nameser.h>
 #include <resolv.h>
 #include <arpa/inet.h>
+#include <socklib.h>
 
 int riscos_getaddrinfo(const char *node, const char *service,
                        const struct addrinfo *hints,

@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2025 4Mation Educational Resources Ltd
+ *   All rights reserved.
+ */
 /* -*-  mode:c; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil;  -*- */
 /*
    Copyright (C) 2016 by Ronnie Sahlberg <ronniesahlberg@gmail.com>
@@ -1233,20 +1237,44 @@ smb2_connect_async_next_addr(struct smb2_context *smb2, const struct addrinfo *b
                 int fd;
                 err = connect_async_ai(smb2, ai, &fd);
 
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
+
                 if (err == 0) {
                         /* clear the error that could be set by a previous ai
                          * connection */
                         smb2_set_error(smb2, "");
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                         smb2->connecting_fds[smb2->connecting_fds_count++] = fd;
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                         if (smb2->change_fd) {
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                                 smb2->change_fd(smb2, fd, SMB2_ADD_FD);
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                                 smb2_change_events(smb2, fd, POLLOUT);
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                         }
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
                         smb2->next_addrinfo = ai->ai_next;
                         break;
                 }
         }
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         return err;
 }
@@ -1254,14 +1282,23 @@ smb2_connect_async_next_addr(struct smb2_context *smb2, const struct addrinfo *b
 /* Copied from FFmpeg: libavformat/network.c */
 static void interleave_addrinfo(struct addrinfo *base)
 {
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         struct addrinfo **next = &base->ai_next;
         while (*next) {
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                 struct addrinfo *cur = *next;
                 /* Iterate forward until we find an entry of a different family. */
                 if (cur->ai_family == base->ai_family) {
                         next = &cur->ai_next;
                         continue;
                 }
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                 if (cur == base->ai_next) {
                         /*
                         ** If the first one following base is of a different family, just
@@ -1271,6 +1308,9 @@ static void interleave_addrinfo(struct addrinfo *base)
                         next = &base->ai_next;
                         continue;
                 }
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                 /* Unchain cur from the rest of the list from its current spot. */
                 *next = cur->ai_next;
                 /* Hook in cur directly after base. */
@@ -1284,7 +1324,13 @@ static void interleave_addrinfo(struct addrinfo *base)
                 ** cur.
                 */
                 base = cur->ai_next;
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         }
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
 }
 
 static void set_ai_port(struct addrinfo *ai, short port_no)
@@ -1312,11 +1358,17 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
         size_t addr_count = 0;
         const struct addrinfo *ai;
 
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         if (SMB2_VALID_SOCKET(smb2->fd)) {
                 smb2_set_error(smb2, "Trying to connect but already "
                                "connected.");
                 return -EINVAL;
         }
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         addr = strdup(server);
         if (addr == NULL) {
@@ -1326,6 +1378,9 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
         }
         host = addr;
         port = host;
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         /* ipv6 in [...] form ? */
         if (host[0] == '[') {
@@ -1343,6 +1398,9 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                 port = str + 1;
         }
 
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         port = strchr(port, ':');
         if (port != NULL) {
                 *port++ = 0;
@@ -1351,7 +1409,13 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
         }
 
         /* is it a hostname ? */
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         err = getaddrinfo(host, port, NULL, &smb2->addrinfos);
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         if (err != 0) {
                 free(addr);
 #if defined(_WINDOWS) || defined(_XBOX)
@@ -1367,6 +1431,9 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                         smb2_set_error(smb2, "Invalid address:%s  "
                                 "Can not resolve into IPv4/v6.", server);
                 }
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
                 switch (err) {
                     case EAI_AGAIN:
                         return -EAGAIN;
@@ -1392,9 +1459,18 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                                 return -EINVAL;
                 }
         }
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         free(addr);
 
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         interleave_addrinfo(smb2->addrinfos);
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         /* Allocate connecting fds array */
         for (ai = smb2->addrinfos; ai != NULL; ai = ai->ai_next)
@@ -1406,7 +1482,13 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                 return -ENOMEM;
         }
 
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         err = smb2_connect_async_next_addr(smb2, smb2->addrinfos);
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (err == 0) {
                 smb2->connect_cb   = cb;
@@ -1418,6 +1500,9 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                 smb2->addrinfos = NULL;
                 smb2->next_addrinfo = NULL;
         }
+
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         return err;
 }
