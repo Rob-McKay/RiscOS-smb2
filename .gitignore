@@ -3,7 +3,9 @@
 .DS_Store
 
 # VSCode files
-.vscode
+.vscode/*
+!.vscode/settings.json
+
 
 # Prerequisites
 *.d

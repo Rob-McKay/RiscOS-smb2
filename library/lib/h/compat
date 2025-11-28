@@ -848,6 +848,7 @@ int getlogin_r(char *buf, size_t size);
 #undef EOVERFLOW
 #include <sys/errno.h>
 #include <stdint.h>
+#include <netdb.h>
 #include <socklib.h>
 
 typedef uint32_t UWORD32;
@@ -860,8 +861,18 @@ long long int be64toh(long long int x);
 #define srandom srand
 #define random rand
 
+#define getaddrinfo riscos_getaddrinfo
+#define freeaddrinfo riscos_freeaddrinfo
+
+int riscos_getaddrinfo(const char *node, const char*service,
+                const struct addrinfo *hints,
+                struct addrinfo **res);
+
+void riscos_freeaddrinfo(struct addrinfo *res);
+
 
 #define NEED_POLL
+
 
 #define POLLIN      0x0001    /* There is data to read */
 #define POLLPRI     0x0002    /* There is urgent data to read */
