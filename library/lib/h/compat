@@ -879,6 +879,18 @@ int asprintf(char **strp, const char *fmt, ...);
 
 #define ENODATA         96              /* No message available on STREAM */
 
+#ifndef O_CREAT
+#define O_CREAT 0x200
+#endif
+
+#ifndef O_TRUNC
+#define O_TRUNC 0x0400
+#endif
+
+#ifndef O_EXCL
+#define O_EXCL 0x0800
+#endif
+
 #endif /* __riscos */
 
 
