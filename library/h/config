@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2025 4Mation Educational Resources Ltd
+ *   All rights reserved.
+ */
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
@@ -39,6 +43,9 @@
 
 /* Whether sockaddr struct has sa_len */
 /* #undef HAVE_SOCKADDR_LEN */
+
+/* Whether struct sockaddr_in has sin_len */
+#define HAVE_SOCK_SIN_LEN 1
 
 /* Whether we have sockaddr_Storage */
 /* #undef HAVE_SOCKADDR_STORAGE */
