@@ -1,3 +1,7 @@
+/*
+ *   Copyright (c) 2025 4Mation Educational Resources Ltd
+ *   All rights reserved.
+ */
 /* -*-  mode:c; tab-width:8; c-basic-offset:8; indent-tabs-mode:nil;  -*- */
 /*
    Copyright (C) 2016 by Ronnie Sahlberg <ronniesahlberg@gmail.com>
@@ -1071,85 +1075,55 @@ smb2_connect_share_async(struct smb2_context *smb2,
                 return -EINVAL;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (smb2->server != NULL) {
                 free(discard_const(smb2->server));
                 smb2->server = NULL;
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (server == NULL) {
                 smb2_set_error(smb2, "No server name provided");
                 return -EINVAL;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (share == NULL) {
                 smb2_set_error(smb2, "No share name provided");
                 return -EINVAL;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         smb2->server = strdup(server);
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (smb2->server == NULL) {
                 return -ENOMEM;
         }
 
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (smb2->share) {
                 free(discard_const(smb2->share));
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         smb2->share = strdup(share);
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (smb2->share == NULL) {
                 return -ENOMEM;
         }
 
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (user) {
                 smb2_set_user(smb2, user);
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         c_data = calloc(1, sizeof(struct connect_data));
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (c_data == NULL) {
                 smb2_set_error(smb2, "Failed to allocate connect_data");
                 return -ENOMEM;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         c_data->server = strdup(smb2->server);
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         if (c_data->server == NULL) {
                 free_c_data(smb2, c_data);
                 smb2_set_error(smb2, "Failed to strdup(server)");
                 return -ENOMEM;
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         c_data->share = strdup(smb2->share);
         if (c_data->share == NULL) {
@@ -1158,14 +1132,10 @@ smb2_connect_share_async(struct smb2_context *smb2,
                 return -ENOMEM;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (smb2->user == NULL) {
                 smb2_set_error(smb2, "smb2->user is NULL");
                 return -ENOMEM;
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         c_data->user = strdup(smb2->user);
         if (c_data->user == NULL) {
@@ -1174,17 +1144,12 @@ smb2_connect_share_async(struct smb2_context *smb2,
                 return -ENOMEM;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         if (asprintf(&c_data->utf8_unc, "\\\\%s\\%s", c_data->server,
                      c_data->share) < 0) {
                 free_c_data(smb2, c_data);
                 smb2_set_error(smb2, "Failed to allocate unc string.");
                 return -ENOMEM;
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
 
         c_data->utf16_unc = smb2_utf8_to_utf16(c_data->utf8_unc);
         if (c_data->utf16_unc == NULL) {
@@ -1194,26 +1159,16 @@ smb2_connect_share_async(struct smb2_context *smb2,
                 return -ENOMEM;
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
-
         c_data->cb = cb;
         c_data->cb_data = cb_data;
 
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         err = smb2_connect_async(smb2, server, connect_cb, c_data);
         if (err != 0) {
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
+                printf("(" __FILE__ ":%d) %s smb2_connect_async returned %d\r\n", __LINE__, __func__, err);
 
                 free_c_data(smb2, c_data);
                 return err;
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
 
         return 0;
 }
