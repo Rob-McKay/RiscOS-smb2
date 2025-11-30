@@ -23,7 +23,7 @@
 /* #undef HAVE_FCNTL_H */
 
 /* Define to 1 if you have the <sys/fcntl.h> header file. */
-#define HAVE_SYS_FCNTL_H 1
+/* #undef HAVE_SYS_FCNTL_H */
 
 /* Define to 1 if you have the <gssapi/gssapi.h> header file. */
 /* #undef HAVE_GSSAPI_GSSAPI_H */
@@ -39,6 +39,9 @@
 
 /* Whether sockaddr struct has sa_len */
 /* #undef HAVE_SOCKADDR_LEN */
+
+/* Whether struct sockaddr_in has sin_len */
+#define HAVE_SOCK_SIN_LEN 1
 
 /* Whether we have sockaddr_Storage */
 /* #undef HAVE_SOCKADDR_STORAGE */

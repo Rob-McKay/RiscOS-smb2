@@ -125,6 +125,9 @@ int smb2_connect_share(struct smb2_context *smb2,
         struct sync_cb_data *cb_data;
         int rc = 0;
 
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         cb_data = &smb2->connect_cb_data;
 	rc = smb2_connect_share_async(smb2, server, share, user, connect_cb, cb_data);
         if (rc < 0) {

@@ -1075,15 +1075,19 @@ smb2_connect_share_async(struct smb2_context *smb2,
                 free(discard_const(smb2->server));
                 smb2->server = NULL;
         }
+
         if (server == NULL) {
                 smb2_set_error(smb2, "No server name provided");
                 return -EINVAL;
         }
+
         if (share == NULL) {
                 smb2_set_error(smb2, "No share name provided");
                 return -EINVAL;
         }
+
         smb2->server = strdup(server);
+
         if (smb2->server == NULL) {
                 return -ENOMEM;
         }
@@ -1091,7 +1095,9 @@ smb2_connect_share_async(struct smb2_context *smb2,
         if (smb2->share) {
                 free(discard_const(smb2->share));
         }
+
         smb2->share = strdup(share);
+
         if (smb2->share == NULL) {
                 return -ENOMEM;
         }
@@ -1099,33 +1105,41 @@ smb2_connect_share_async(struct smb2_context *smb2,
         if (user) {
                 smb2_set_user(smb2, user);
         }
+
         c_data = calloc(1, sizeof(struct connect_data));
+
         if (c_data == NULL) {
                 smb2_set_error(smb2, "Failed to allocate connect_data");
                 return -ENOMEM;
         }
+
         c_data->server = strdup(smb2->server);
+
         if (c_data->server == NULL) {
                 free_c_data(smb2, c_data);
                 smb2_set_error(smb2, "Failed to strdup(server)");
                 return -ENOMEM;
         }
+
         c_data->share = strdup(smb2->share);
         if (c_data->share == NULL) {
                 free_c_data(smb2, c_data);
                 smb2_set_error(smb2, "Failed to strdup(share)");
                 return -ENOMEM;
         }
+
         if (smb2->user == NULL) {
                 smb2_set_error(smb2, "smb2->user is NULL");
                 return -ENOMEM;
         }
+
         c_data->user = strdup(smb2->user);
         if (c_data->user == NULL) {
                 free_c_data(smb2, c_data);
                 smb2_set_error(smb2, "Failed to strdup(user)");
                 return -ENOMEM;
         }
+
         if (asprintf(&c_data->utf8_unc, "\\\\%s\\%s", c_data->server,
                      c_data->share) < 0) {
                 free_c_data(smb2, c_data);
@@ -1146,6 +1160,8 @@ smb2_connect_share_async(struct smb2_context *smb2,
 
         err = smb2_connect_async(smb2, server, connect_cb, c_data);
         if (err != 0) {
+                printf("(" __FILE__ ":%d) %s smb2_connect_async returned %d\r\n", __LINE__, __func__, err);
+
                 free_c_data(smb2, c_data);
                 return err;
         }
