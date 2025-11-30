@@ -846,9 +846,14 @@ int getlogin_r(char *buf, size_t size);
 
 #undef EFBIG
 #undef EOVERFLOW
-#include <sys/errno.h>
 #include <stdint.h>
+#include <sys/errno.h>
+#include <sys/types.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <arpa/nameser.h>
+#include <arpa/inet.h>
+#include <resolv.h>
 #include <socklib.h>
 
 typedef uint32_t UWORD32;
