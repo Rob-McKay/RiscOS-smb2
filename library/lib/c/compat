@@ -667,7 +667,7 @@ int riscos_getaddrinfo(const char *node, const char *service,
 {
     struct sockaddr_in *sin;
 
-    sin = calloc(1, sizeof(struct sockaddr_in));
+    sin = (struct sockaddr_in *)calloc(1, sizeof(struct sockaddr_in));
     sin->sin_len = sizeof(struct sockaddr_in);
     sin->sin_family = AF_INET;
 
@@ -679,16 +679,21 @@ int riscos_getaddrinfo(const char *node, const char *service,
     }
     else
     {
-        /* Some error checking would be nice */
-        sin->sin_addr.s_addr = inet_addr(node);
+        if (inet_pton(AF_INET, node, sin->sin_addr.s_addr) != 1)
+        {
+            printf("(" __FILE__ ":%d) %s: '%s' is not a valid IPv4 name\r\n", __LINE__, __func__, node);
+            free(sin);
+            return -EINVAL;
+        }
     }
+    
     sin->sin_port = 0;
     if (service)
     {
         sin->sin_port = htons(atoi(service));
     }
 
-    *res = calloc(1, sizeof(struct addrinfo));
+    *res = (struct addrinfo *)calloc(1, sizeof(struct addrinfo));
 
     (*res)->ai_family = PF_INET;
     (*res)->ai_socktype = SOCK_STREAM;
