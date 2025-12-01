@@ -109,7 +109,8 @@
 #include "smb3-seal.h"
 #include "libsmb2-private.h"
 #include "portable-endian.h"
-#include <errno.h>
+
+
 
 #define MAX_URL_SIZE 1024
 
@@ -285,8 +286,12 @@ smb2_write_to_socket(struct smb2_context *smb2)
                                 return 0;
                         }
                         smb2_set_error(smb2, "Error when writing to "
+#ifdef __riscos
+                               "socket :%d %s", errno, _inet_err());
+#else
                                        "socket :%d %s", errno,
                                        smb2_get_error(smb2));
+#endif
                         return -1;
                 }
 
@@ -1011,7 +1016,11 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
                         }
                         smb2_set_error(smb2, "smb2_service: socket error "
                                         "%s(%d).",
+#ifdef __riscos
+                                        _inet_err(), err);
+#else
                                         strerror(err), err);
+#endif
                 } else {
                         smb2_set_error(smb2, "smb2_service: POLLERR, "
                                         "Unknown socket error.");
@@ -1055,7 +1064,11 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
                         } else {
                                 smb2_set_error(smb2, "smb2_service: socket error "
                                                 "%s(%d) while connecting.",
+#ifdef __riscos
+                                                _inet_err(), err);
+#else
                                                 strerror(err), err);
+#endif
                         }
 
                         if (smb2->connect_cb) {
