@@ -1183,7 +1183,11 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         fd = socket(family, SOCK_STREAM, 0);
         if (!SMB2_VALID_SOCKET(fd)) {
                 smb2_set_error(smb2, "Failed to open smb2 socket. "
+#ifdef __riscos
+                               "Errno:%d - %s.", errno, _inet_err());
+#else
                                "Errno:%s(%d).", strerror(errno), errno);
+#endif
                 return -EIO;
         }
 
@@ -1216,7 +1220,11 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
                   && WSAGetLastError() != WSAEWOULDBLOCK) {
 #endif
                 smb2_set_error(smb2, "Connect failed with errno : "
+#ifdef __riscos
+                               "Errno:%d - %s.", errno, _inet_err());
+#else
                         "%s(%d)", strerror(errno), errno);
+#endif
                 close(fd);
                 printf("(" __FILE__ ":%d) %s returning -EIO\r\n", __LINE__, __func__, -EIO);
                 return -EIO;
