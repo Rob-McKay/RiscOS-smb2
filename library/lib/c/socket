@@ -1109,8 +1109,8 @@ set_nonblocking(t_socket fd)
         unsigned long opt = 0;
         IoctlSocket(fd, FIONBIO, (char *)&opt);
 #elif defined __riscos
-        unsigned long opt = 1;
-        socketioctl(fd, FIONBIO, &opt);
+       // unsigned long opt = 1;
+       // socketioctl(fd, FIONBIO, &opt);
 #else
         unsigned v;
         v = fcntl(fd, F_GETFL, 0);
@@ -1154,6 +1154,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         switch (ai->ai_family) {
         case AF_INET:
                 socksize = sizeof(struct sockaddr_in);
+/**/printf("(" __FILE__ ":%d) AF_INET socksize = %d (%d.%d.%d.%d)\n", __LINE__, socksize, ai->ai_addr->sa_data[2], ai->ai_addr->sa_data[3], ai->ai_addr->sa_data[4], ai->ai_addr->sa_data[5]);
                 memcpy(&ss, ai->ai_addr, socksize);
 #ifdef HAVE_SOCK_SIN_LEN
                 ((struct sockaddr_in *)&ss)->sin_len = socksize;
@@ -1163,6 +1164,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         case AF_INET6:
 #if !defined(PICO_PLATFORM) || defined(LWIP_INETV6)
                 socksize = sizeof(struct sockaddr_in6);
+/**/printf("(" __FILE__ ":%d) AF_INET6 socksize = %d\n", __LINE__, socksize);
                 memcpy(&ss, ai->ai_addr, socksize);
 #ifdef HAVE_SOCK_SIN_LEN
                 ((struct sockaddr_in6 *)&ss)->sin6_len = socksize;
@@ -1183,7 +1185,11 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         fd = socket(family, SOCK_STREAM, 0);
         if (!SMB2_VALID_SOCKET(fd)) {
                 smb2_set_error(smb2, "Failed to open smb2 socket. "
-                               "Errno:%s(%d).", strerror(errno), errno);
+#ifdef __riscos
+                               "%d - %s.", errno, _inet_err());
+#else
+                               ":%s(%d).", strerror(errno), errno);
+#endif
                 return -EIO;
         }
 
@@ -1203,6 +1209,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
 #endif
 
         set_nonblocking(fd);
+
         set_tcp_sockopt(fd, TCP_NODELAY, 1);
 #if 0 == CONFIGURE_OPTION_TCP_LINGER
         setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const void*)&yes, sizeof yes);
@@ -1216,7 +1223,11 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
                   && WSAGetLastError() != WSAEWOULDBLOCK) {
 #endif
                 smb2_set_error(smb2, "Connect failed with errno : "
+#ifdef __riscos
+                               "%d - %s.", errno, _inet_err());
+#else
                         "%s(%d)", strerror(errno), errno);
+#endif
                 close(fd);
                 printf("(" __FILE__ ":%d) %s returning -EIO\r\n", __LINE__, __func__, -EIO);
                 return -EIO;
