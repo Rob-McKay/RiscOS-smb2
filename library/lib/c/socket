@@ -880,6 +880,7 @@ read_more_data:
 static ssize_t smb2_readv_from_socket(struct smb2_context *smb2,
                                       const struct iovec *iov, int iovcnt)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         ssize_t rc = readv(smb2->fd, (struct iovec*) iov, iovcnt);
         return rc;
 }
@@ -915,13 +916,13 @@ smb2_read_from_socket(struct smb2_context *smb2)
 
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 count = smb2_read_data(smb2, smb2_readv_from_socket, 0);
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s - count = %d\r\n", __LINE__, __func__, count);
                 if (count == -EAGAIN) {
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         return 0;
                 }
                 if (count) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s - count = %d\r\n", __LINE__, __func__, count);
                         return count;
                 }
         }
