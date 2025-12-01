@@ -889,29 +889,39 @@ smb2_read_from_socket(struct smb2_context *smb2)
 {
         int count;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         while(1) {
                 /* initialize the input vectors to the spl and the header
                  * which are both static data in the smb2 context.
                  * additional vectors will be added when we can map this to
                  * the corresponding pdu.
                  */
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2->in.num_done == 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2->recv_state = SMB2_RECV_SPL;
                         smb2->spl = 0;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_free_iovector(smb2, &smb2->in);
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if (smb2_add_iovector(smb2, &smb2->in, (uint8_t *)&smb2->spl,
                                           SMB2_SPL_SIZE, NULL) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2_set_error(smb2, "Too many I/O vectors when adding SPL");
                                 return -1;
                         }
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 count = smb2_read_data(smb2, smb2_readv_from_socket, 0);
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (count == -EAGAIN) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         return 0;
                 }
                 if (count) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         return count;
                 }
         }
