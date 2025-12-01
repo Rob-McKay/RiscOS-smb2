@@ -343,13 +343,16 @@ static int smb2_read_data(struct smb2_context *smb2, read_func func,
         struct smb2_pdu *pdu = smb2->pdu;
         ssize_t count;
         int len;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 
 read_more_data:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         num_done = smb2->in.num_done;
 
         /* Copy all the current vectors to our work vector */
         niov = smb2->in.niov;
         for (i = 0; i < niov; i++) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 iov[i].iov_base = smb2->in.iov[i].buf;
 #if defined(_WIN32) || defined(_XBOX)
                 iov[i].iov_len = (unsigned long)smb2->in.iov[i].len;
@@ -358,24 +361,30 @@ read_more_data:
 #endif
         }
         tmpiov = iov;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 
         /* Skip the vectors we have already read */
         while (num_done >= tmpiov->iov_len) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 num_done -= tmpiov->iov_len;
                 tmpiov++;
                 niov--;
         }
 
         /* Adjust the first vector to read */
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         tmpiov->iov_base = (char *)tmpiov->iov_base + num_done;
 #if defined(_WIN32) || defined(_XBOX)
         tmpiov->iov_len -= (unsigned long)num_done;
 #else
         tmpiov->iov_len -= (size_t)num_done;
 #endif
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Read into our trimmed iovectors */
         count = func(smb2, tmpiov, niov);
+/**/printf("(" __FILE__ ":%d) %s count == %d\r\n", __LINE__, __func__, count);
         if (count < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 #if defined(_WIN32) || defined(_XBOX)
                 int err = WSAGetLastError();
                 if (err == WSAEINTR || err == WSAEWOULDBLOCK) {
@@ -393,7 +402,9 @@ read_more_data:
 #endif
                 return -1;
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (count == 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* remote side has closed the socket. */
                 smb2_set_error(smb2, "Read from socket failed, "
 #ifdef __riscos
@@ -403,15 +414,19 @@ read_more_data:
 #endif
                 return -1;
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         smb2->in.num_done += (size_t)count;
 
         if (smb2->in.num_done < smb2->in.total_size) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 goto read_more_data;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* At this point we have all the data we need for the current phase */
         switch (smb2->recv_state) {
         case SMB2_RECV_SPL:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2->spl = be32toh(smb2->spl);
                 smb2->recv_state = SMB2_RECV_HEADER;
                 if (smb2_add_iovector(smb2, &smb2->in, &smb2->header[0],
@@ -421,42 +436,53 @@ read_more_data:
                 }
                 goto read_more_data;
         case SMB2_RECV_HEADER:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (!memcmp(smb2->in.iov[smb2->in.niov - 1].buf, smb3tfrm, 4)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2->in.iov[smb2->in.niov - 1].len = 52;
                         len = smb2->spl - 52;
                         smb2->in.total_size -= 12;
                         {
                                 uint8_t *tmp = malloc(len);
                                 if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_set_error(smb2, "malloc failed while adding TRFM payload");
                                         return -1;
                                 }
                                 if (smb2_add_iovector(smb2, &smb2->in,tmp,len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_set_error(smb2, "Failed to add iovector for TRFM payload");
                                         return -1;
                                 }
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         memcpy(smb2->in.iov[smb2->in.niov - 1].buf,
                                &smb2->in.iov[smb2->in.niov - 2].buf[52], 12);
                         smb2->recv_state = SMB2_RECV_TRFM;
                         goto read_more_data;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2_decode_header(smb2, &smb2->in.iov[smb2->in.niov - 1],
                                        &smb2->hdr) != 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Failed to decode smb2 "
                                        "header: %s", smb2_get_error(smb2));
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* if serving, and this is an smb1 negotiate, just short-circuit and flush
                  * any remaining data on input and call the callback */
                 if (smb2_is_server(smb2) && smb2->hdr.command == SMB1_NEGOTIATE) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         uint8_t flusher[32];
                         struct iovec fiov;
                         fiov.iov_base = (char *)flusher;
                         fiov.iov_len = sizeof(flusher);
                         do {
                                 count = func(smb2, &fiov, 1);
+/**/printf("(" __FILE__ ":%d) %s count = %d\r\n", __LINE__, __func__, count);
                                 if (count < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 #if defined(_WIN32) || defined(_XBOX)
                                         int err = WSAGetLastError();
                                         if (err == WSAEINTR || err == WSAEWOULDBLOCK) {
@@ -464,12 +490,15 @@ read_more_data:
                                         int err = errno;
                                         if (err == EINTR || err == EAGAIN || err == EWOULDBLOCK) {
 #endif
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 count = 0;
                                         }
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         }
                         while (count > 0);
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         /* put on wait queue so queue_pdu doesn't complain */
                         SMB2_LIST_ADD_END(&smb2->waitqueue, pdu);
 
@@ -480,24 +509,31 @@ read_more_data:
                         smb2->next_pdu = NULL;
                         return 0;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* Record the offset for the start of payload data. */
                 smb2->payload_offset = smb2->in.num_done;
 
                 if (!smb2_is_server(smb2)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2->credits += smb2->hdr.credit_request_response;
                         /* Got credit, recheck if there are pending pdu to be sent. */
                         smb2_change_events(smb2, smb2->fd, smb2_which_events(smb2));
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (!smb2_is_server(smb2) && !(smb2->hdr.flags & SMB2_FLAGS_SERVER_TO_REDIR)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "received non-reply");
                         return -1;
                 }
                 else if (smb2_is_server(smb2) && (smb2->hdr.flags & SMB2_FLAGS_SERVER_TO_REDIR)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "received non-request");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2->hdr.status == SMB2_STATUS_PENDING) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         /* Pending. Just treat the rest of the data as
                          * padding then check for and skip processing below.
                          * We will eventually receive a proper reply for this
@@ -510,278 +546,378 @@ read_more_data:
                          * so we need to take the SPL size into account.
                          */
                         if (!has_xfrmhdr) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 len += SMB2_SPL_SIZE;
                         }
                         /* Add padding before the next PDU */
                         smb2->recv_state = SMB2_RECV_PAD;
                         {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 uint8_t *tmp = malloc(len);
                                 if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_set_error(smb2, "malloc failed while adding PENDING padding");
                                         return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 if (smb2_add_iovector(smb2, &smb2->in,tmp, len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         goto read_more_data;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2_is_server(smb2)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         pdu = smb2->pdu;
                         if (!pdu) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2_set_error(smb2, "no pdu for request");
                                 return -1;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         /* set the pdu header's message id to the request's id and
                         *  the tree id to the request's tree id
                         */
                         pdu->header.message_id = smb2->hdr.message_id;
                         if (!(smb2->hdr.flags & SMB2_FLAGS_ASYNC_COMMAND)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 pdu->header.sync.tree_id = smb2->hdr.sync.tree_id;
                         }
                         /* if the session is properly opened then we could get
                          * any request from the client, so use the header's command
                          * not the pdu's command for the rest of input
                          */
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if (smb2->hdr.command > SMB2_SESSION_SETUP) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 pdu->header.command = smb2->hdr.command;
                         }
                         pdu->header.credit_charge = smb2->hdr.credit_charge;
                         pdu->header.credit_request_response = smb2->hdr.credit_request_response;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if ((smb2->hdr.command != SMB2_OPLOCK_BREAK) ||
                                         (smb2->hdr.message_id != 0xffffffffffffffffULL)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 if (smb2->pdu) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_free_pdu(smb2, smb2->pdu);
                                         smb2->pdu = NULL;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 pdu = smb2->pdu = smb2_find_pdu(smb2, smb2->hdr.message_id);
                                 if (pdu == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         len = smb2->spl - smb2->in.num_done;
                                         if (!has_xfrmhdr) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 len += SMB2_SPL_SIZE;
                                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         if (len > SMB2_MAX_PDU_SIZE) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 smb2_set_error(smb2, "no matching PDU found");
                                                 return -1;
                                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2->recv_state = SMB2_RECV_UNKNOWN;
                                         {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 uint8_t *tmp = malloc(len);
                                                 if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                         smb2_set_error(smb2, "malloc failed while adding UNKNOWN padding");
                                                         return -1;
                                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 if (smb2_add_iovector(smb2, &smb2->in, tmp, len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                         return -1;
                                                 }
                                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         goto read_more_data;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 /*
                                  * If part of a compound chain, verify that
                                  * the previous command has been processed.
                                  */
                                 if (pdu->prev_compound_mid &&
                                     smb2_find_pdu(smb2, pdu->prev_compound_mid)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_set_error(smb2, "compound reply received out of order");
                                         return -1;
                                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 SMB2_LIST_REMOVE(&smb2->waitqueue, pdu);
                         } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 /* oplock and lease break notifications won't have a pdu so make one
                                  * oplock replies (that are NOT notifications, i.e. have a valid message_id)
                                  * are normal replies handled above */
                                 pdu = smb2->pdu;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 if (!pdu) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         pdu = smb2->pdu = smb2_allocate_pdu(smb2, SMB2_OPLOCK_BREAK,
                                                 smb2_oplock_break_notify,  NULL);
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 if (pdu == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                        smb2_set_error(smb2, "can not alloc pdu");
                                        return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 len = smb2_get_fixed_size(smb2, pdu);
                 if (((int)len) < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "can not determine fixed size");
                         return -1;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2->recv_state = SMB2_RECV_FIXED;
                 {
                         size_t alen = len & 0xfffe;
                         uint8_t *tmp = malloc(alen);
                         if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2_set_error(smb2, "malloc failed while adding FIXED payload");
                                 return -1;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if (smb2_add_iovector(smb2, &smb2->in,
                                   tmp,
                                   alen, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 return -1;
                         }
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 goto read_more_data;
         case SMB2_RECV_FIXED:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 len = smb2_process_payload_fixed(smb2, pdu);
                 if (len < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Failed to parse fixed part of "
                                        "command payload. %s",
                                        smb2_get_error(smb2));
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         return -1;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* Add application provided iovectors */
                 if (len) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         for (i = 0; i < pdu->in.niov; i++) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 size_t num = pdu->in.iov[i].len;
 
                                 if (num > (size_t)len) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         num = (size_t)len;
                                 }
                                 if (smb2_add_iovector(smb2, &smb2->in,
                                                   pdu->in.iov[i].buf,
                                                   num, NULL) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 len -= num;
 
                                 if (len == 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2->recv_state = SMB2_RECV_VARIABLE;
                                         goto read_more_data;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if (len > 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2->recv_state = SMB2_RECV_VARIABLE;
                                 {
                                         uint8_t *tmp = malloc(len);
                                         if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 smb2_set_error(smb2, "malloc failed while adding VARIABLE tail");
                                                 return -1;
                                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         if (smb2_add_iovector(smb2, &smb2->in,
                                                   tmp,
                                                   len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                                 return -1;
                                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 goto read_more_data;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* Check for padding */
                 if (smb2->hdr.next_command) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         len = smb2->hdr.next_command - (SMB2_HEADER_SIZE +
                                   smb2->in.num_done - smb2->payload_offset);
                 } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         len = smb2->spl + SMB2_SPL_SIZE - smb2->in.num_done;
                         /*
                          * We never read the SPL when handling decrypted
                          * payloads.
                          */
                         if (smb2->enc) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 len -= SMB2_SPL_SIZE;
                         }
                 }
                 if (len < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Negative number of PAD bytes "
                                        "encountered during PDU decode of"
                                        "fixed payload");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (len > 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         /* Add padding before the next PDU */
                         smb2->recv_state = SMB2_RECV_PAD;
                         {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 uint8_t *tmp = malloc(len);
                                 if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         smb2_set_error(smb2, "malloc failed while adding PAD");
                                         return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 if (smb2_add_iovector(smb2, &smb2->in,
                                           tmp,
                                           len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                         return -1;
                                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         goto read_more_data;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* If len == 0 it means there is no padding and we are finished
                  * reading this PDU */
                 break;
         case SMB2_RECV_VARIABLE:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2_process_payload_variable(smb2, pdu) < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Failed to parse variable part of "
                                        "command payload. %s",
                                        smb2_get_error(smb2));
                         return -1;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* Check for padding */
                 if (smb2->hdr.next_command) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         len = smb2->hdr.next_command - (SMB2_HEADER_SIZE +
                                   smb2->in.num_done - smb2->payload_offset);
                 } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         len = smb2->spl + SMB2_SPL_SIZE - smb2->in.num_done;
                         /*
                          * We never read the SPL when handling decrypted
                          * payloads.
                          */
                         if (smb2->enc) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 len -= SMB2_SPL_SIZE;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (len < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Negative number of PAD bytes "
                                        "encountered during PDU decode of"
                                        "variable payload");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (len > 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         /* Add padding before the next PDU */
                         smb2->recv_state = SMB2_RECV_PAD;
                         uint8_t * tmp = malloc(len);
                         if (tmp == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                             smb2_set_error(smb2, "malloc failed while adding PAD");
                             return -1;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         if (smb2_add_iovector(smb2, &smb2->in,
                                               tmp,
                                               len, free) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2_set_error(smb2, "Failed to add iovector for PAD");
                                 return -1;
                         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         goto read_more_data;
                 }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* If len == 0 it means there is no padding and we are finished
                  * reading this PDU */
                 break;
         case SMB2_RECV_PAD:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* We are finished reading all the data and padding for this
                  * PDU. Break out of the switch and invoke the callback.
                  */
                 break;
         case SMB2_RECV_TRFM:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* We are finished reading the full payload for the
                  * encrypted packet.
                  */
                 smb2->in.num_done = 0;
                 if (smb3_decrypt_pdu(smb2)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Failed to decrypyt pdu");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* We are all done now with this PDU. Reset num_done to 0
                  * and restart with a new SPL for the next chain.
                  */
                 return 0;
         case SMB2_RECV_UNKNOWN:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* We have finished reading the payload the the unknown reply we
                  * just received. As it is not matching anything we are waiting on
                  * there is no PDU associated with this and thus nothing else we need
@@ -791,18 +927,24 @@ read_more_data:
                 return 0;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (smb2->in.niov < 2) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2_set_error(smb2, "Too few io vectors in received PDU.");
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (smb2->hdr.status == SMB2_STATUS_PENDING) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* This was a pending command. Just ignore it and proceed
                  * to read the next chain.
                  */
                 if (smb2->passthrough) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         pdu = smb2_find_pdu(smb2, smb2->hdr.message_id);
                         if (pdu == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 smb2_set_error(smb2, "no matching PDU found");
                                 /* ignore this error for now, it might be OK
                                  * to not pass the pending reply along */
@@ -810,15 +952,18 @@ read_more_data:
                         }
                         else
                         {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                                 /* need to pass all pdus through note we do not free
                                 * the pdu or delist the request */
                                 pdu->cb(smb2, smb2->hdr.status, pdu->payload, pdu->cb_data);
                         }
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2->in.num_done = 0;
                 return 0;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* We don't yet have the signing key until later, once session
          * setup has completed, so we can not yet verify the signature
          * of the final leg of session setup.
@@ -826,54 +971,69 @@ read_more_data:
         if (smb2->sign &&
             (smb2->hdr.flags & SMB2_FLAGS_SIGNED) &&
             (smb2->hdr.command != SMB2_SESSION_SETUP) ) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 uint8_t signature[16] _U_;
                 memcpy(&signature[0], &smb2->in.iov[1 + iov_offset].buf[48], 16);
                 if (smb2_calc_signature(smb2, &smb2->in.iov[1 + iov_offset].buf[48],
                                         &smb2->in.iov[1 + iov_offset],
                                         smb2->in.niov - 1 - iov_offset) < 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Signature calc failed.");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (memcmp(&signature[0], &smb2->in.iov[1 + iov_offset].buf[48], 16)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Wrong signature in received "
                                        "PDU");
                         return -1;
                 }
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         is_chained = smb2->hdr.next_command;
 
         if (smb2_is_server(smb2)) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* queue requests to correlate our replies we send back later */
                 SMB2_LIST_ADD_END(&smb2->waitqueue, pdu);
                 pdu->cb(smb2, smb2->hdr.status, pdu->payload, pdu->cb_data);
                 smb2->pdu = smb2->next_pdu;
                 smb2->next_pdu = NULL;
         } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 pdu->cb(smb2, smb2->hdr.status, pdu->payload, pdu->cb_data);
                 if (!pdu->caller_frees_pdu) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_free_pdu(smb2, pdu);
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2->pdu = NULL;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (is_chained) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* Record at which iov we ended in this loop so we know where to start in the next */
                 iov_offset = smb2->in.niov - 1;
                 smb2->recv_state = SMB2_RECV_HEADER;
                 if (smb2_add_iovector(smb2, &smb2->in, &smb2->header[0],
                                   SMB2_HEADER_SIZE, NULL) == NULL) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_set_error(smb2, "Too many I/O vectors when adding chained header");
                         return -1;
                 }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 goto read_more_data;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* We are all done now with this chain. Reset num_done to 0
          * and restart with a new SPL for the next chain.
          */
         smb2->in.num_done = 0;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
