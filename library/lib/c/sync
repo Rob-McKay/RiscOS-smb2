@@ -126,13 +126,15 @@ int smb2_connect_share(struct smb2_context *smb2,
         int rc = 0;
 
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
         cb_data = &smb2->connect_cb_data;
 	rc = smb2_connect_share_async(smb2, server, share, user, connect_cb, cb_data);
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         if (rc < 0) {
                 goto out;
 	}
+
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
 	rc = wait_for_reply(smb2, cb_data);
         if (rc < 0) {
@@ -140,8 +142,12 @@ int smb2_connect_share(struct smb2_context *smb2,
                 return rc;
 	}
 
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
         rc = cb_data->status;
  out:
+/**/printf(__FILE__ ":%d\r\n", __LINE__);
+
 
 	return rc;
 }

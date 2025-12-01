@@ -46,15 +46,11 @@ int main(int argc, char *argv[])
                 usage();
         }
 
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
-
 	smb2 = smb2_init_context();
         if (smb2 == NULL) {
                 fprintf(stderr, "Failed to init context\n");
                 exit(0);
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         url = smb2_parse_url(smb2, argv[1]);
         if (url == NULL) {
@@ -62,8 +58,6 @@ int main(int argc, char *argv[])
                         smb2_get_error(smb2));
                 exit(0);
         }
-
-/**/printf(__FILE__ ":%d\r\n", __LINE__);
 
         smb2_set_security_mode(smb2, SMB2_NEGOTIATE_SIGNING_ENABLED);
 
