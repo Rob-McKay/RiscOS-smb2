@@ -381,13 +381,21 @@ read_more_data:
                         return -EAGAIN;
                 }
                 smb2_set_error(smb2, "Read from socket failed, "
+#ifdef __riscos
+                               "errno:%d (%s) Closing socket.", err, _inet_err());
+#else
                                "errno:%d. Closing socket.", err);
+#endif
                 return -1;
         }
         if (count == 0) {
                 /* remote side has closed the socket. */
                 smb2_set_error(smb2, "Read from socket failed, "
+#ifdef __riscos
+                               "(%s) remote closed connection.", _inet_err());
+#else
                                "remote closed connection.");
+#endif
                 return -1;
         }
         smb2->in.num_done += (size_t)count;
@@ -919,6 +927,8 @@ static ssize_t smb2_readv_from_buf(struct smb2_context *smb2,
                 smb2->enc_pos += (int)len;
                 count += len;
         }
+
+/**/printf("(" __FILE__ ":%d) %s: returning count of %d\r\n", __LINE__, __func__, count);
         return count;
 }
 
