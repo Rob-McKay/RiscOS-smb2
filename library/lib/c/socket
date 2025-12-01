@@ -1154,6 +1154,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         switch (ai->ai_family) {
         case AF_INET:
                 socksize = sizeof(struct sockaddr_in);
+/**/printf("(" __FILE__ ":%d) AF_INET socksize = %d\n", __LINE__, socksize);
                 memcpy(&ss, ai->ai_addr, socksize);
 #ifdef HAVE_SOCK_SIN_LEN
                 ((struct sockaddr_in *)&ss)->sin_len = socksize;
@@ -1163,6 +1164,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         case AF_INET6:
 #if !defined(PICO_PLATFORM) || defined(LWIP_INETV6)
                 socksize = sizeof(struct sockaddr_in6);
+/**/printf("(" __FILE__ ":%d) AF_INET6 socksize = %d\n", __LINE__, socksize);
                 memcpy(&ss, ai->ai_addr, socksize);
 #ifdef HAVE_SOCK_SIN_LEN
                 ((struct sockaddr_in6 *)&ss)->sin6_len = socksize;
@@ -1184,9 +1186,9 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         if (!SMB2_VALID_SOCKET(fd)) {
                 smb2_set_error(smb2, "Failed to open smb2 socket. "
 #ifdef __riscos
-                               "Errno:%d - %s.", errno, _inet_err());
+                               "%d - %s.", errno, _inet_err());
 #else
-                               "Errno:%s(%d).", strerror(errno), errno);
+                               ":%s(%d).", strerror(errno), errno);
 #endif
                 return -EIO;
         }
@@ -1206,7 +1208,10 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
         }
 #endif
 
+#ifndef __riscos
         set_nonblocking(fd);
+#endif
+
         set_tcp_sockopt(fd, TCP_NODELAY, 1);
 #if 0 == CONFIGURE_OPTION_TCP_LINGER
         setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const void*)&yes, sizeof yes);
@@ -1221,7 +1226,7 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
 #endif
                 smb2_set_error(smb2, "Connect failed with errno : "
 #ifdef __riscos
-                               "Errno:%d - %s.", errno, _inet_err());
+                               "%d - %s.", errno, _inet_err());
 #else
                         "%s(%d)", strerror(errno), errno);
 #endif
