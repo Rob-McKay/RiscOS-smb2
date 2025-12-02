@@ -65,47 +65,35 @@
 static int wait_for_reply(struct smb2_context *smb2,
                           struct sync_cb_data *cb_data)
 {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
-
         time_t t = time(NULL);
 
         while (!cb_data->is_finished) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 		struct pollfd pfd;
 		memset(&pfd, 0, sizeof(struct pollfd));
 		pfd.fd = smb2_get_fd(smb2);
 		pfd.events = smb2_which_events(smb2);
 
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 		if (poll(&pfd, 1, 1000) < 0) {
-/**/printf("(" __FILE__ ":%d) %s - Poll failed (%s)\r\n", __LINE__, __func__, _inet_err());
 			smb2_set_error(smb2, "Poll failed");
 			return -1;
 		}
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (smb2->timeout) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_timeout_pdus(smb2);
                 }
 		if (!SMB2_VALID_SOCKET(smb2->fd) && ((time(NULL) - t) > (smb2->timeout)))
 		{
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 			smb2_set_error(smb2, "Timeout expired and no connection exists\n");
 			return -1;
 		}                
                 if (pfd.revents == 0) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         continue;
                 }
 		if (smb2_service(smb2, pfd.revents) < 0) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 			smb2_set_error(smb2, "smb2_service failed with : "
                                         "%s\n", smb2_get_error(smb2));
                         return -1;
 		}
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 	}
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 
         return 0;
 }

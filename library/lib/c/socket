@@ -1042,6 +1042,7 @@ static ssize_t smb2_readv_from_socket(struct smb2_context *smb2,
 {
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         ssize_t rc = readv(smb2->fd, (struct iovec*) iov, iovcnt);
+/**/printf("(" __FILE__ ":%d) %s - fd = %d, result = %d (%s)\r\n", __LINE__, __func__, smb2->fd, rc, _inet_err());
         return rc;
 }
 
