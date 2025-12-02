@@ -132,6 +132,7 @@ smb2_connect_async_next_addr(struct smb2_context *smb2, const struct addrinfo *b
 void
 smb2_close_connecting_fds(struct smb2_context *smb2)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         size_t i;
         for (i = 0; i < smb2->connecting_fds_count; ++i) {
                 t_socket fd = smb2->connecting_fds[i];
@@ -1120,6 +1121,7 @@ smb2_close_connecting_fd(struct smb2_context *smb2, t_socket fd)
 {
         size_t i;
 
+/**/printf("(" __FILE__ ":%d) %s - fd = %d\r\n", __LINE__, __func__, fd);
         close(fd);
         /* Remove the fd from the connecting_fds array */
         for (i = 0; i < smb2->connecting_fds_count; ++i) {
@@ -1278,7 +1280,7 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         goto out;
                 }
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s - fd = %d\r\n", __LINE__, __func__, fd);
                 smb2->fd = fd;
 
                 smb2_close_connecting_fds(smb2);
