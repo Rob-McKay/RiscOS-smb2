@@ -93,10 +93,12 @@ srvsvc_SHARE_INFO_0_coder(struct dcerpc_context *ctx,
 {
         struct srvsvc_SHARE_INFO_0 *nsi1 = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(ctx, pdu, iov, offset, &nsi1->netname,
                              PTR_UNIQUE, dcerpc_utf16z_coder)) {
                 return -1;
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -109,6 +111,7 @@ srvsvc_SHARE_INFO_0_carray_coder(struct dcerpc_context *ctx,
                                  struct smb2_iovec *iov, int *offset,
                                  void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return dcerpc_carray_coder(ctx, pdu, iov, offset, ptr,
                                    sizeof(struct srvsvc_SHARE_INFO_0),
                                    srvsvc_SHARE_INFO_0_coder);
@@ -127,6 +130,7 @@ srvsvc_SHARE_INFO_0_CONTAINER_coder(struct dcerpc_context *dce, struct dcerpc_pd
 {
         struct srvsvc_SHARE_INFO_0_CONTAINER *ctr = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_uint32_coder(dce, pdu, iov, offset, &ctr->EntriesRead)) {
                 return -1;
         }
@@ -145,6 +149,7 @@ srvsvc_SHARE_INFO_0_CONTAINER_coder(struct dcerpc_context *dce, struct dcerpc_pd
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -163,6 +168,7 @@ srvsvc_SHARE_INFO_1_coder(struct dcerpc_context *ctx,
 {
         struct srvsvc_SHARE_INFO_1 *nsi1 = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(ctx, pdu, iov, offset, &nsi1->netname,
                              PTR_UNIQUE, dcerpc_utf16z_coder)) {
                 return -1;
@@ -174,6 +180,7 @@ srvsvc_SHARE_INFO_1_coder(struct dcerpc_context *ctx,
                              PTR_UNIQUE, dcerpc_utf16z_coder)) {
                 return -1;
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -186,6 +193,7 @@ srvsvc_SHARE_INFO_1_carray_coder(struct dcerpc_context *ctx,
                                  struct smb2_iovec *iov, int *offset,
                                  void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return dcerpc_carray_coder(ctx, pdu, iov, offset, ptr,
                                    sizeof(struct srvsvc_SHARE_INFO_1),
                                    srvsvc_SHARE_INFO_1_coder);
@@ -204,6 +212,7 @@ srvsvc_SHARE_INFO_1_CONTAINER_coder(struct dcerpc_context *dce, struct dcerpc_pd
 {
         struct srvsvc_SHARE_INFO_1_CONTAINER *ctr = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_uint32_coder(dce, pdu, iov, offset, &ctr->EntriesRead)) {
                 return -1;
         }
@@ -222,6 +231,7 @@ srvsvc_SHARE_INFO_1_CONTAINER_coder(struct dcerpc_context *dce, struct dcerpc_pd
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -243,6 +253,7 @@ srvsvc_SHARE_ENUM_UNION_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu
         struct srvsvc_SHARE_ENUM_UNION *ctr = ptr;
         uint64_t p;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         p = ctr->Level;
         if (dcerpc_uint3264_coder(ctx, pdu, iov, offset, &p)) {
                 return -1;
@@ -266,6 +277,7 @@ srvsvc_SHARE_ENUM_UNION_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu
                 break;
         };
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -282,6 +294,7 @@ srvsvc_SHARE_ENUM_STRUCT_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pd
 {
         struct srvsvc_SHARE_ENUM_STRUCT *ses = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_uint32_coder(ctx, pdu, iov, offset, &ses->Level)) {
                 return -1;
         }
@@ -289,6 +302,7 @@ srvsvc_SHARE_ENUM_STRUCT_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pd
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -310,6 +324,7 @@ srvsvc_NetrShareEnum_req_coder(struct dcerpc_context *ctx,
 {
         struct srvsvc_NetrShareEnum_req *req = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(ctx, pdu, iov, offset, &req->ServerName,
                              PTR_UNIQUE, dcerpc_utf16z_coder)) {
                 return -1;
@@ -327,6 +342,7 @@ srvsvc_NetrShareEnum_req_coder(struct dcerpc_context *ctx,
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -338,6 +354,7 @@ srvsvc_NetrShareEnum_rep_coder(struct dcerpc_context *dce,
 {
         struct srvsvc_NetrShareEnum_rep *rep = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(dce, pdu, iov, offset, &rep->ses,
                              PTR_REF, srvsvc_SHARE_ENUM_STRUCT_coder)) {
                 return -1;
@@ -354,6 +371,7 @@ srvsvc_NetrShareEnum_rep_coder(struct dcerpc_context *dce,
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -380,6 +398,7 @@ srvsvc_SHARE_INFO_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         struct srvsvc_SHARE_INFO *info = ptr;
         uint64_t p;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         p = info->level;
         if (dcerpc_uint3264_coder(ctx, pdu, iov, offset, &p)) {
                 return -1;
@@ -396,6 +415,7 @@ srvsvc_SHARE_INFO_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                 break;
         };
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -415,6 +435,7 @@ srvsvc_NetrShareGetInfo_req_coder(struct dcerpc_context *dce,
 {
         struct srvsvc_NetrShareGetInfo_req *req = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(dce, pdu, iov, offset, &req->ServerName,
                              PTR_UNIQUE, dcerpc_utf16z_coder)) {
                 return -1;
@@ -428,6 +449,7 @@ srvsvc_NetrShareGetInfo_req_coder(struct dcerpc_context *dce,
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -439,6 +461,7 @@ srvsvc_NetrShareGetInfo_rep_coder(struct dcerpc_context *dce,
 {
         struct srvsvc_NetrShareGetInfo_rep *rep = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_ptr_coder(dce, pdu, iov, offset, &rep->InfoStruct,
                              PTR_REF, srvsvc_SHARE_INFO_coder)) {
                 return -1;
@@ -447,5 +470,6 @@ srvsvc_NetrShareGetInfo_rep_coder(struct dcerpc_context *dce,
                 return -1;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
