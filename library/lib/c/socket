@@ -1167,7 +1167,7 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
                         }
                 }
                 if (fd_found == 0) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s return 0\r\n", __LINE__, __func__);
                         /* Not an error, this can happen if more than one
                          * connecting fds had POLLOUT events. In that case,
                          * only the first one is connected and all other FDs
@@ -1195,7 +1195,7 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
                         err = smb2_connect_async_next_addr(smb2, smb2->next_addrinfo);
                         /* error already set by connect_async_ai() */
                         if (err == 0) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s return 0\r\n", __LINE__, __func__);
                                 return 0;
                         }
                 } else if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (char *)&err, &err_size) != 0 || err != 0) {
@@ -1258,6 +1258,7 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
                                 err = smb2_connect_async_next_addr(smb2, smb2->next_addrinfo);
                                 /* error already set by connect_async_ai() */
                                 if (err == 0) {
+/**/printf("(" __FILE__ ":%d) %s return 0\r\n", __LINE__, __func__);
                                         return 0;
                                 }
                         } else {
@@ -1324,7 +1325,7 @@ smb2_service_fd(struct smb2_context *smb2, t_socket fd, int revents)
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2_timeout_pdus(smb2);
         }
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
+/**/printf("(" __FILE__ ":%d) %s return %d\r\n", __LINE__, __func__, ret);
         return ret;
 }
 
@@ -1332,8 +1333,10 @@ int
 smb2_service(struct smb2_context *smb2, int revents)
 {
         if (smb2->connecting_fds_count > 0) {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 return smb2_service_fd(smb2, smb2->connecting_fds[0], revents);
         } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 return smb2_service_fd(smb2, smb2->fd, revents);
         }
 }
