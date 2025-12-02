@@ -282,6 +282,7 @@ struct smb2_context *smb2_init_context(void)
 
         ret = getlogin_r(buf, sizeof(buf));
         smb2_set_user(smb2, ret == 0 ? buf : "Guest");
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         smb2->fd = SMB2_INVALID_SOCKET;
         smb2->connecting_fds = NULL;
         smb2->connecting_fds_count = 0;
@@ -309,6 +310,7 @@ struct smb2_context *smb2_init_context(void)
 
 void smb2_destroy_context(struct smb2_context *smb2)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (smb2 == NULL) {
                 return;
         }
@@ -317,10 +319,12 @@ void smb2_destroy_context(struct smb2_context *smb2)
                 if (smb2->change_fd) {
                         smb2->change_fd(smb2, smb2->fd, SMB2_DEL_FD);
                 }
+/**/printf("(" __FILE__ ":%d) %s - fd = %d\r\n", __LINE__, __func__, smb2->fd);
                 close(smb2->fd);
                 smb2->fd = SMB2_INVALID_SOCKET;
         }
         else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 smb2_close_connecting_fds(smb2);
         }
 

@@ -1004,6 +1004,7 @@ read_more_data:
         } else {
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 pdu->cb(smb2, smb2->hdr.status, pdu->payload, pdu->cb_data);
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (!pdu->caller_frees_pdu) {
 /**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                         smb2_free_pdu(smb2, pdu);
