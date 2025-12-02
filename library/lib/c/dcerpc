@@ -276,6 +276,7 @@ int
 dcerpc_set_uint8(struct dcerpc_context *ctx, struct smb2_iovec *iov,
                  int *offset, uint8_t value)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (*offset + sizeof(uint8_t) > iov->len) {
                 return -1;
         }
@@ -288,6 +289,7 @@ static int
 dcerpc_set_uint16(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                   struct smb2_iovec *iov, int *offset, uint16_t value)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 1) & ~1;
         
         if (*offset + sizeof(uint16_t) > iov->len) {
@@ -307,6 +309,7 @@ static int
 dcerpc_set_uint32(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                   struct smb2_iovec *iov, int *offset, uint32_t value)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 3) & ~3;
         
         if (*offset + sizeof(uint32_t) > iov->len) {
@@ -325,6 +328,7 @@ static int
 dcerpc_set_uint64(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                   struct smb2_iovec *iov, int *offset, uint64_t value)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 7) & ~7;
 
         if (*offset + sizeof(uint64_t) > iov->len) {
@@ -343,6 +347,7 @@ static int
 dcerpc_get_uint8(struct dcerpc_context *ctx, struct smb2_iovec *iov,
                   int *offset, uint8_t *value)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (*offset + sizeof(uint8_t) > iov->len) {
                 return -1;
         }
@@ -357,6 +362,7 @@ dcerpc_get_uint16(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
 {
         uint16_t val;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 1) & ~1;
         
         if (*offset + sizeof(uint16_t) > iov->len) {
@@ -378,6 +384,7 @@ dcerpc_get_uint32(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
 {
         uint32_t val;
         
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 3) & ~3;
         
         if (*offset + sizeof(uint32_t) > iov->len) {
@@ -400,6 +407,7 @@ dcerpc_get_uint64(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
 {
         uint64_t val;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         *offset = (*offset + 7) & ~7;
 
         if (*offset + sizeof(uint64_t) > iov->len) {
@@ -419,6 +427,7 @@ int
 dcerpc_uint64_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                     struct smb2_iovec *iov, int *offset, void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (pdu->max_alignment < 8) {
                         pdu->max_alignment = 8;
@@ -436,18 +445,21 @@ dcerpc_uint64_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
 struct smb2_context *
 dcerpc_get_smb2_context(struct dcerpc_context *dce)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return dce->smb2;
 }
 
 void *
 dcerpc_get_pdu_payload(struct dcerpc_pdu *pdu)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return pdu->payload;
 }
 
 struct dcerpc_context *
 dcerpc_create_context(struct smb2_context *smb2)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         struct dcerpc_context *ctx;
 
         ctx = calloc(1, sizeof(struct dcerpc_context));
@@ -458,6 +470,7 @@ dcerpc_create_context(struct smb2_context *smb2)
 
         ctx->smb2 = smb2;
         ctx->packed_drep[0] |= DCERPC_DR_LITTLE_ENDIAN;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return ctx;
 }
 
@@ -491,6 +504,7 @@ dcerpc_connect_context_async(struct dcerpc_context *dce, const char *path,
 void
 dcerpc_destroy_context(struct dcerpc_context *dce)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dce == NULL) {
                 return;
         }
@@ -501,6 +515,7 @@ dcerpc_destroy_context(struct dcerpc_context *dce)
 void
 dcerpc_free_pdu(struct dcerpc_context *dce, struct dcerpc_pdu *pdu)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu == NULL) {
                 return;
         }
@@ -514,6 +529,7 @@ dcerpc_free_pdu(struct dcerpc_context *dce, struct dcerpc_pdu *pdu)
 struct dcerpc_pdu *
 dcerpc_allocate_pdu(struct dcerpc_context *dce, int direction, int payload_size)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         struct dcerpc_pdu *pdu;
 
         pdu = calloc(1, sizeof(struct dcerpc_pdu));
@@ -541,6 +557,7 @@ dcerpc_add_deferred_pointer(struct dcerpc_context *ctx,
                             struct dcerpc_pdu *pdu,
                             dcerpc_coder coder, void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         pdu->ptrs[pdu->max_ptr].coder = coder;
         pdu->ptrs[pdu->max_ptr].ptr = ptr;
         pdu->max_ptr++;
@@ -552,6 +569,7 @@ dcerpc_do_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                 int *offset, void *ptr,
                 dcerpc_coder coder)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         pdu->max_alignment = 1;
         pdu->is_conformance_run = 1;
         if (coder(ctx, pdu, iov, offset, ptr)) {
@@ -574,6 +592,7 @@ dcerpc_process_deferred_pointers(struct dcerpc_context *ctx,
         struct dcerpc_deferred_pointer *dp;
         int idx;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         while (pdu->cur_ptr != pdu->max_ptr) {
                 idx = pdu->cur_ptr++;
                 dp = &pdu->ptrs[idx];
@@ -581,6 +600,7 @@ dcerpc_process_deferred_pointers(struct dcerpc_context *ctx,
                         return -1;
                 }
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -588,6 +608,7 @@ int
 dcerpc_uint32_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                     struct smb2_iovec *iov, int *offset, void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (pdu->max_alignment < 4) {
                         pdu->max_alignment = 4;
@@ -599,12 +620,14 @@ dcerpc_uint32_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         } else {
                 return dcerpc_set_uint32(ctx, pdu, iov, offset, *(uint32_t *)ptr);
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 }
 
 int
 dcerpc_uint16_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                     struct smb2_iovec *iov, int *offset, void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (pdu->max_alignment < 2) {
                         pdu->max_alignment = 2;
@@ -623,6 +646,7 @@ int
 dcerpc_uint8_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                    struct smb2_iovec *iov, int *offset, void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (pdu->max_alignment < 1) {
                         pdu->max_alignment = 1;
@@ -646,6 +670,7 @@ dcerpc_uint3264_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         uint32_t u32 = 0;
         uint64_t val = *(uint64_t *)ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (ctx->tctx_id) {
                         if (pdu->max_alignment < 8) {
@@ -658,6 +683,7 @@ dcerpc_uint3264_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                 }
                 return 0;
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->direction == DCERPC_DECODE) {
                 if (ctx->tctx_id) {
                         if (dcerpc_get_uint64(ctx, pdu, iov, offset, ptr)) {
@@ -670,6 +696,7 @@ dcerpc_uint3264_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                         *(uint64_t *)ptr = u32;
                 }
         } else {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (ctx->tctx_id) {
                         if (dcerpc_set_uint64(ctx, pdu, iov, offset, val)) {
                                 return -1;
@@ -690,10 +717,12 @@ dcerpc_conformance_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         uint32_t u32 = 0;
         uint64_t val = *(uint64_t *)ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (!pdu->is_conformance_run) {
                 return 0;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->direction == DCERPC_DECODE) {
                 if (ctx->tctx_id) {
                         if (dcerpc_get_uint64(ctx, pdu, iov, offset, ptr)) {
@@ -716,6 +745,7 @@ dcerpc_conformance_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                         }
                 }
         }
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return 0;
 }
 
@@ -727,6 +757,7 @@ dcerpc_encode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                   int *offset, void *ptr,
                   enum ptr_type type, dcerpc_coder coder)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         int top_level = pdu->top_level;
         uint64_t val;
 
@@ -745,6 +776,7 @@ dcerpc_encode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
 
         switch (type) {
         case PTR_REF:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (pdu->top_level) {
                         pdu->top_level = 0;
                         if (dcerpc_do_coder(dce, pdu, iov, offset, ptr, coder)) {
@@ -761,6 +793,7 @@ dcerpc_encode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 dcerpc_add_deferred_pointer(dce, pdu, (dcerpc_coder)coder, ptr);
                 break;
         case PTR_FULL:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (ptr == NULL) {
                         val = 0;
                         if (dcerpc_uint3264_coder(dce, pdu, iov, offset, &val)) {
@@ -785,6 +818,7 @@ dcerpc_encode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 }
                 break;
         case PTR_UNIQUE:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (ptr == NULL) {
                         val = 0;
                         if (dcerpc_uint3264_coder(dce, pdu, iov, offset, &val)) {
@@ -809,7 +843,9 @@ dcerpc_encode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 break;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
  out:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->top_level) {
                 pdu->top_level = 0;
                 if (dcerpc_process_deferred_pointers(dce, pdu, iov, offset)) {
@@ -832,6 +868,7 @@ dcerpc_decode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
         int top_level = pdu->top_level;
         uint64_t p;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->is_conformance_run) {
                 if (!(type==PTR_REF && pdu->top_level)) {
                         if (dce->tctx_id) {
@@ -847,8 +884,10 @@ dcerpc_decode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 return 0;
         }
         
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         switch (type) {
         case PTR_REF:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (pdu->top_level) {
                         pdu->top_level = 0;
                         if (dcerpc_do_coder(dce, pdu, iov, offset, ptr, coder)) {
@@ -864,6 +903,7 @@ dcerpc_decode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 dcerpc_add_deferred_pointer(dce, pdu, (dcerpc_coder)coder, ptr);
                 break;
         case PTR_UNIQUE:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 if (dcerpc_uint3264_coder(dce, pdu, iov, offset, &p)) {
                         return -1;
                 }
@@ -882,11 +922,14 @@ dcerpc_decode_ptr(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                 }
                 break;
         case PTR_FULL:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 /* not implemented yet */
                 break;
         }
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
  out:
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->top_level) {
                 pdu->top_level = 0;
                 if (dcerpc_process_deferred_pointers(dce, pdu, iov, offset)) {
@@ -907,6 +950,7 @@ dcerpc_carray_coder(struct dcerpc_context *ctx,
         int i;
         uint64_t p;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Conformance */
         p = carray->max_count;
         if (dcerpc_conformance_coder(ctx, pdu, iov, offset, &p)) {
@@ -941,6 +985,7 @@ dcerpc_ptr_coder(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                  struct smb2_iovec *iov, int *offset, void *ptr,
                  enum ptr_type type, dcerpc_coder coder)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->direction == DCERPC_DECODE) {
                 return dcerpc_decode_ptr(dce, pdu, iov, offset, ptr,
                                          type, coder);
@@ -959,6 +1004,7 @@ dcerpc_encode_utf16(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         int i;
         uint64_t val;
         uint16_t zero = 0;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 
         /* Conformance part */
         if (pdu->is_conformance_run) {
@@ -1025,6 +1071,7 @@ dcerpc_decode_utf16(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
         char *str;
         const char *tmp;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Conformance part */
         if (pdu->is_conformance_run) {
                 if (dcerpc_conformance_coder(ctx, pdu, iov, offset, &val)) {
@@ -1083,6 +1130,7 @@ dcerpc_utf16z_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                     struct smb2_iovec *iov, int *offset,
                     void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->direction == DCERPC_DECODE) {
                 return dcerpc_decode_utf16(ctx, pdu, iov, offset, ptr, 1);
         } else {
@@ -1096,6 +1144,7 @@ dcerpc_utf16_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                    struct smb2_iovec *iov, int *offset,
                    void *ptr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (pdu->direction == DCERPC_DECODE) {
                 return dcerpc_decode_utf16(ctx, pdu, iov, offset, ptr, 0);
         } else {
@@ -1108,6 +1157,7 @@ dcerpc_header_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                     struct smb2_iovec *iov, int *offset,
                     struct dcerpc_header *hdr)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Major Version */
         if (dcerpc_uint8_coder(ctx, pdu, iov, offset, &hdr->rpc_vers)) {
                 return -1;
@@ -1164,6 +1214,7 @@ dcerpc_uuid_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
 {
         int i;
         
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_uint32_coder(ctx, pdu, iov, offset, &uuid->v1)) {
                 return -1;
         }
@@ -1196,6 +1247,7 @@ dcerpc_context_handle_coder(struct dcerpc_context *dce,
 {
         struct ndr_context_handle *handle = ptr;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_uint32_coder(dce, pdu, iov, offset, &handle->context_handle_attributes)) {
                 return -1;
         }
@@ -1216,6 +1268,7 @@ dcerpc_bind_coder(struct dcerpc_context *ctx,
         int oo, i, j;
         uint16_t v;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Max Xmit Frag */
         if (dcerpc_uint16_coder(ctx, pdu, iov, offset, &bind->max_xmit_frag)) {
                 return -1;
@@ -1287,6 +1340,7 @@ dcerpc_request_coder(struct dcerpc_context *ctx,
                      struct dcerpc_request_pdu *req,
                      struct smb2_iovec *iov, int *offset)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         /* Alloc Hint */
         if (dcerpc_uint32_coder(ctx, pdu, iov, offset, &req->alloc_hint)) {
                 return -1;
@@ -1310,6 +1364,7 @@ dcerpc_bind_ack_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                       struct dcerpc_bind_ack_pdu *bind_ack,
                       struct smb2_iovec *iov, int *offset)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         int i;
         uint16_t sec_addr_len;
 
@@ -1373,6 +1428,7 @@ dcerpc_response_coder(struct dcerpc_context *ctx,
                       struct dcerpc_response_pdu *rsp,
                       struct smb2_iovec *iov, int *offset)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 #if !defined(_MSC_VER) && !defined(__riscos)
         struct dcerpc_pdu *pdu = container_of(rsp, struct dcerpc_pdu, rsp);
 #else
@@ -1422,6 +1478,7 @@ static int
 dcerpc_pdu_coder(struct dcerpc_context *ctx, struct dcerpc_pdu *pdu,
                  struct smb2_iovec *iov, int *offset)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (dcerpc_header_coder(ctx, pdu, iov, offset, &pdu->hdr)) {
                 return -1;
         }
@@ -1466,6 +1523,7 @@ dce_unfragment_ioctl(struct dcerpc_context *dce,  struct dcerpc_pdu *pdu,
         struct smb2_iovec tmpiov _U_;
         int o;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         o = 0;
         if (dcerpc_header_coder(dce, pdu, iov, &o, &hdr)) {
                 return;
@@ -1517,6 +1575,7 @@ static void
 dcerpc_send_pdu_cb_and_free(struct dcerpc_context *dce, struct dcerpc_pdu *pdu,
                             int status, void *command_data)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         dcerpc_cb pdu_cb = pdu->cb;
         void *pdu_cb_data = pdu->cb_data;
 
@@ -1535,6 +1594,7 @@ dcerpc_call_cb(struct smb2_context *smb2, int status,
         void *payload;
         int offset = 0;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         pdu->direction = DCERPC_DECODE;
 
         if (status != SMB2_STATUS_SUCCESS) {
@@ -1689,6 +1749,7 @@ smb2_bind_cb(struct smb2_context *smb2, int status,
         int i;
         int offset = 0;
         
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         pdu->direction = DCERPC_DECODE;
 
         if (status != SMB2_STATUS_SUCCESS) {
@@ -1850,6 +1911,7 @@ smb2_open_cb(struct smb2_context *smb2, int status,
         struct smb2_create_reply *rep = command_data;
         struct dcerpc_context *dce = data->dce;
 
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (status != SMB2_STATUS_SUCCESS) {
                 data->cb(dce, -nterror_to_errno(status),
                          NULL, data->cb_data);
@@ -1922,24 +1984,28 @@ dcerpc_open_async(struct dcerpc_context *dce, dcerpc_cb cb,
 const char *
 dcerpc_get_error(struct dcerpc_context *dce)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return smb2_get_error(dcerpc_get_smb2_context(dce));
 }
 
 void
 dcerpc_free_data(struct dcerpc_context *dce, void *data)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         smb2_free_data(dcerpc_get_smb2_context(dce), data);
 }
 
 int
 dcerpc_pdu_direction(struct dcerpc_pdu *pdu)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         return pdu->direction;
 }
 
 int
 dcerpc_align_3264(struct dcerpc_context *ctx, int offset)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (offset < 0) {
                 return offset;
         }
@@ -1955,12 +2021,14 @@ dcerpc_align_3264(struct dcerpc_context *ctx, int offset)
 /* Used for testing. Override/force the transfer syntax. */
 void dcerpc_set_tctx(struct dcerpc_context *ctx, int tctx)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         ctx->tctx_id = tctx;
 }
 
 /* Used for testing. Override/force the transfer syntax. */
 void dcerpc_set_endian(struct dcerpc_pdu *pdu, int little_endian)
 {
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         if (little_endian) {
                 pdu->hdr.packed_drep[0] |= DCERPC_DR_LITTLE_ENDIAN;
         } else {
@@ -1970,6 +2038,7 @@ void dcerpc_set_endian(struct dcerpc_pdu *pdu, int little_endian)
 int dcerpc_get_cr(struct dcerpc_pdu *pdu)
 {
         return pdu->is_conformance_run;
+/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 }
 
                                                  
