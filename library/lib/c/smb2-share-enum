@@ -106,7 +106,6 @@ static void
 share_enum_bind_cb(struct dcerpc_context *dce, int status,
                       void *command_data, void *cb_data)
 {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         struct smb2nse *nse = cb_data;
         struct smb2_context *smb2 = dcerpc_get_smb2_context(dce);
 
@@ -124,13 +123,11 @@ share_enum_bind_cb(struct dcerpc_context *dce, int status,
                                    sizeof(struct srvsvc_NetrShareEnum_rep),
                                    srvsvc_ioctl_cb, nse);
         if (status) {
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
                 nse->cb(smb2, status, NULL, nse->cb_data);
                 nse_free(nse);
                 dcerpc_destroy_context(dce);
                 return;
         }
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
 }
 
 int
@@ -185,7 +182,6 @@ smb2_share_enum_async(struct smb2_context *smb2,
         nse->se_req.PreferedMaximumLength = 0xffffffff;
         nse->se_req.ResumeHandle = 0;
 
-/**/printf("(" __FILE__ ":%d) %s\r\n", __LINE__, __func__);
         rc = dcerpc_connect_context_async(dce, "srvsvc", &srvsvc_interface,
                                           share_enum_bind_cb, nse);
         if (rc) {
