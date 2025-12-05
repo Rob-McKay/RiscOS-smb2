@@ -125,21 +125,17 @@ int smb2_connect_share(struct smb2_context *smb2,
         struct sync_cb_data *cb_data;
         int rc = 0;
 
-
         cb_data = &smb2->connect_cb_data;
 	rc = smb2_connect_share_async(smb2, server, share, user, connect_cb, cb_data);
-
         if (rc < 0) {
                 goto out;
 	}
-
 
 	rc = wait_for_reply(smb2, cb_data);
         if (rc < 0) {
                 cb_data->status = SMB2_STATUS_CANCELLED;
                 return rc;
 	}
-
 
         rc = cb_data->status;
  out:

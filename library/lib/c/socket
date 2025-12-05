@@ -110,8 +110,6 @@
 #include "libsmb2-private.h"
 #include "portable-endian.h"
 
-
-
 #define MAX_URL_SIZE 1024
 
 /* Timeout in ms between 2 consecutive socket connection.
@@ -932,7 +930,6 @@ static ssize_t smb2_readv_from_buf(struct smb2_context *smb2,
                 smb2->enc_pos += (int)len;
                 count += len;
         }
-
         return count;
 }
 
@@ -1198,7 +1195,6 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
                 smb2_set_error(smb2, "Unknown address family :%d. "
                                 "Only IPv4/IPv6 supported so far.",
                                 ai->ai_family);
-                printf("(" __FILE__ ":%d) %s returning -EINVAL\r\n", __LINE__, __func__, -EINVAL);
                 return -EINVAL;
 
         }
@@ -1231,7 +1227,6 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
 #endif
 
         set_nonblocking(fd);
-
         set_tcp_sockopt(fd, TCP_NODELAY, 1);
 #if 0 == CONFIGURE_OPTION_TCP_LINGER
         setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (const void*)&yes, sizeof yes);
@@ -1251,7 +1246,6 @@ connect_async_ai(struct smb2_context *smb2, const struct addrinfo *ai, int *fd_o
                         "%s(%d)", strerror(errno), errno);
 #endif
                 close(fd);
-                printf("(" __FILE__ ":%d) %s returning -EIO\r\n", __LINE__, __func__, -EIO);
                 return -EIO;
         }
 
@@ -1292,13 +1286,11 @@ static void interleave_addrinfo(struct addrinfo *base)
         struct addrinfo **next = &base->ai_next;
         while (*next) {
                 struct addrinfo *cur = *next;
-
                 /* Iterate forward until we find an entry of a different family. */
                 if (cur->ai_family == base->ai_family) {
                         next = &cur->ai_next;
                         continue;
                 }
-
                 if (cur == base->ai_next) {
                         /*
                         ** If the first one following base is of a different family, just
@@ -1308,7 +1300,6 @@ static void interleave_addrinfo(struct addrinfo *base)
                         next = &base->ai_next;
                         continue;
                 }
-
                 /* Unchain cur from the rest of the list from its current spot. */
                 *next = cur->ai_next;
                 /* Hook in cur directly after base. */
@@ -1390,7 +1381,6 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
 
         /* is it a hostname ? */
         err = getaddrinfo(host, port, NULL, &smb2->addrinfos);
-
         if (err != 0) {
                 free(addr);
 #if defined(_WINDOWS) || defined(_XBOX)
@@ -1406,41 +1396,39 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                         smb2_set_error(smb2, "Invalid address:%s  "
                                 "Can not resolve into IPv4/v6.", server);
                 }
-
                 switch (err) {
                     case EAI_AGAIN:
-                        printf("(" __FILE__ ":%d) %s returning -EAGAIN (%d)\r\n", __LINE__, __func__, -EAGAIN);
                         return -EAGAIN;
                     case EAI_NONAME:
-                        printf("(" __FILE__ ":%d) %s returning -EIO (%d)\r\n", __LINE__, __func__, -EIO);
 #ifdef EAI_NODATA
 #if EAI_NODATA != EAI_NONAME /* Equal in MSVC */
                     case EAI_NODATA:
-                        printf("(" __FILE__ ":%d) %s returning -EIO (%d)\r\n", __LINE__, __func__, -EIO);
 #endif
 #endif
                         case EAI_SERVICE:
-                        printf("(" __FILE__ ":%d) %s returning -EIO (%d)\r\n", __LINE__, __func__, -EIO);
                         case EAI_FAIL:
-                        printf("(" __FILE__ ":%d) %s returning -EIO (%d)\r\n", __LINE__, __func__, -EIO);
 #ifdef EAI_ADDRFAMILY /* Not available in MSVC */
                         case EAI_ADDRFAMILY:
-                        printf("(" __FILE__ ":%d) %s returning -EIO (%d)\r\n", __LINE__, __func__, -EIO);
 #endif
                                 return -EIO;
                         case EAI_MEMORY:
-                                printf("(" __FILE__ ":%d) %s returning -ENOMEM (%d)\r\n", __LINE__, __func__, -ENOMEM);
                                 return -ENOMEM;
 #ifdef EAI_SYSTEM /* Not available in MSVC */
                         case EAI_SYSTEM:
                                 return -errno;
 #endif
                         default:
-                                printf("(" __FILE__ ":%d) %s returning -EINVAL (%d)\r\n", __LINE__, __func__, -EINVAL);
                                 return -EINVAL;
+                        }
+                }
+                else {
+                        int port_no = atoi(port);
+                        for (ai = smb2->addrinfos; ai != NULL; ai = ai->ai_next)
+                        {
+                                set_ai_port((struct addrinfo *)ai, ntohs(port_no));
+                        }
                 }
         }
-
         free(addr);
 
         interleave_addrinfo(smb2->addrinfos);
@@ -1452,7 +1440,6 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
         if (smb2->connecting_fds == NULL) {
                 freeaddrinfo(smb2->addrinfos);
                 smb2->addrinfos = NULL;
-                printf("(" __FILE__ ":%d) %s returning -ENOMEM (%d)\r\n", __LINE__, __func__, -ENOMEM);
                 return -ENOMEM;
         }
 
@@ -1467,7 +1454,6 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                 freeaddrinfo(smb2->addrinfos);
                 smb2->addrinfos = NULL;
                 smb2->next_addrinfo = NULL;
-                printf("(" __FILE__ ":%d) %s returning %d\r\n", __LINE__, __func__, err);
         }
 
         return err;
