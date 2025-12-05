@@ -1428,7 +1428,6 @@ smb2_connect_async(struct smb2_context *smb2, const char *server,
                                 set_ai_port((struct addrinfo *)ai, ntohs(port_no));
                         }
                 }
-        }
         free(addr);
 
         interleave_addrinfo(smb2->addrinfos);
