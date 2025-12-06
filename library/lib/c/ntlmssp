@@ -186,7 +186,7 @@ ntlmssp_init_context(const char *user,
                 return NULL;
         }
 
-/**/printf("("__FILE__ ":%d) %s(%s, %s, %s, %s, %s)`n", __LINE__, __func, user, password, domain, workstation, client_challenge);
+/**/printf("("__FILE__ ":%d) %s(%s, %s, %s, %s, %s)\n", __LINE__, __func__, user, password, domain, workstation, client_challenge);
         if (user) {
                 auth_data->user = strdup(user);
                 if (auth_data->user == NULL) {
@@ -742,6 +742,7 @@ encode_ntlm_auth(struct smb2_context *smb2, time_t ti,
 
         /* user name fields */
         if (!anonymous) {
+/**/printf("("__FILE__ ":%d) %s: Adding user '%s')\n", __LINE__, __func__, auth_data->user);
                 utf16_user = smb2_utf8_to_utf16(auth_data->user);
                 if (utf16_user == NULL) {
                         goto finished;
@@ -1191,6 +1192,7 @@ ntlmssp_authenticate_blob(struct smb2_server *server, struct smb2_context *smb2,
                 auth_data->domain = NULL;
         }
         if (auth_data->user) {
+/**/printf("("__FILE__ ":%d) %s: Freeing user '%s')\n", __LINE__, __func__, auth_data->user);
                 free(auth_data->user);
                 auth_data->user = NULL;
         }
@@ -1204,6 +1206,7 @@ ntlmssp_authenticate_blob(struct smb2_server *server, struct smb2_context *smb2,
         memcpy(&u32, &input_buf[4*15], 4);
 
         smb2_set_user(smb2, auth_data->user);
+/**/printf("("__FILE__ ":%d) %s: User '%s')\n", __LINE__, __func__, auth_data->user);
         smb2_set_domain(smb2, auth_data->domain);
         smb2_set_workstation(smb2, auth_data->workstation);
 
