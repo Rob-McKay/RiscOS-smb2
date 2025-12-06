@@ -187,7 +187,7 @@ ntlmssp_init_context(const char *user,
                 return NULL;
         }
 
-/**/printf("("__FILE__ ":%d) %s(%s, %s, %s, %s, %s)\n", __LINE__, __func__, user, password, domain, workstation, client_challenge);
+/**/printf("("__FILE__ ":%d) %s(%s, ***, %s, %s, ***)\n", __LINE__, __func__, user, domain, workstation);
         if (user) {
                 auth_data->user = strdup(user);
                 if (auth_data->user == NULL) {

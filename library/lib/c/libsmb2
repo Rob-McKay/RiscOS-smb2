@@ -959,6 +959,7 @@ negotiate_cb(struct smb2_context *smb2, int status,
         }
 
         if (smb2->sec == SMB2_SEC_NTLMSSP) {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
                 c_data->auth_data = ntlmssp_init_context(smb2->user,
                                                          smb2->password,
                                                          smb2->domain,
@@ -967,6 +968,7 @@ negotiate_cb(struct smb2_context *smb2, int status,
         }
 #ifdef HAVE_LIBKRB5
         else {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
                 c_data->auth_data = krb5_negotiate_reply(smb2,
                                                          c_data->server,
                                                          smb2->domain,
@@ -3670,6 +3672,7 @@ smb2_session_setup_request_cb(struct smb2_context *smb2, int status, void *comma
                         if (c_data->auth_data) {
                                 ntlmssp_destroy_context(c_data->auth_data);
                         }
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
                         c_data->auth_data = ntlmssp_init_context(
                                         "",
                                         "",
