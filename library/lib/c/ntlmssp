@@ -125,6 +125,7 @@ struct auth_data {
 void
 ntlmssp_destroy_context(struct auth_data *auth)
 {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
         free(auth->ntlm_buf);
         free(auth->buf);
         free(auth->user);
@@ -229,18 +230,21 @@ ntlmssp_init_context(const char *user,
 void
 ntlmssp_set_spnego_wrapping(struct auth_data *auth, int wrap)
 {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
         auth->spnego_wrap = wrap;
 }
 
 int
 ntlmssp_get_spnego_wrapping(struct auth_data *auth)
 {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
         return auth->spnego_wrap;
 }
 
 int
 ntlmssp_get_authenticated(struct auth_data *auth)
 {
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
         return auth ? auth->is_authenticated : 0;
 }
 
@@ -1015,6 +1019,8 @@ ntlmssp_generate_blob(struct smb2_server *server, struct smb2_context *smb2, tim
         int spnego_len;
         int is_wrapped;
 
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
+
         free(auth_data->buf);
         auth_data->buf = NULL;
         auth_data->len = 0;
@@ -1179,6 +1185,8 @@ ntlmssp_authenticate_blob(struct smb2_server *server, struct smb2_context *smb2,
         /* uint32_t negotiate_flags; */
         uint32_t u32;
 
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
+
         if (!input_buf || (input_len < 8) || memcmp(input_buf, "NTLMSSP", 8)) {
                 return -1;
         }
@@ -1309,6 +1317,8 @@ ntlmssp_get_session_key(struct auth_data *auth,
 {
         uint8_t *mkey = NULL;
 
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
+
         if (auth == NULL || key == NULL || key_size == NULL) {
                 return -1;
         }
@@ -1337,6 +1347,8 @@ ntlmssp_get_message_type(struct smb2_context *smb2,
         uint32_t u32;
         uint32_t mechanisms;
         int ntlm_len;
+
+/**/printf("("__FILE__ ":%d) %s\n", __LINE__, __func__);
 
         if (message_type) {
                 *message_type = 0xFFFFFFFF;
